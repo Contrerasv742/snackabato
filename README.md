@@ -1,4 +1,4 @@
-# snackobato
+# Snackobato Assasino
 
 # Contributors
 
@@ -10,4 +10,16 @@ Victor Perez Contreras (Lead Hardware Designer)
 
 # Intention
 
+Shoot god given mommy milker Green M&M's into a bowl.
+
 # Enviorment
+
+Our enviroment.
+
+# Sensors
+
+Blah blah blah.
+
+# Motors
+
+Blah blah blah.
