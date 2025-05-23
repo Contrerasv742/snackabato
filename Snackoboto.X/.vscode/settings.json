@@ -1,0 +1,6 @@
+{
+    "mplab.clangd.arguments": [
+        "--compile-commands-dir=${cwd}Users/daviduniack/Desktop/ECE118/Snackoboto.X/_build/Snackoboto/default"
+    ],
+    "C_Cpp.intelliSenseEngine": "disabled"
+}

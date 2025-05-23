@@ -1,0 +1,5 @@
+/Users/daviduniack/Desktop/ECE118/Snackoboto.X/_build/Snackoboto/default/CMakeFiles/Snackoboto_default_default_XC32_compile.dir
+/Users/daviduniack/Desktop/ECE118/Snackoboto.X/_build/Snackoboto/default/CMakeFiles/Snackoboto_default_default.elf.dir
+/Users/daviduniack/Desktop/ECE118/Snackoboto.X/_build/Snackoboto/default/CMakeFiles/Snackoboto_default_Bin2Hex.dir
+/Users/daviduniack/Desktop/ECE118/Snackoboto.X/_build/Snackoboto/default/CMakeFiles/edit_cache.dir
+/Users/daviduniack/Desktop/ECE118/Snackoboto.X/_build/Snackoboto/default/CMakeFiles/rebuild_cache.dir

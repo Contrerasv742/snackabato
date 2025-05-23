@@ -1,0 +1,10 @@
+# ninja log v6
+3419	3510	1747958158062716329	CMakeFiles/Snackoboto_default_Bin2Hex	817fa7e5f652b700
+2068	3418	1747958158062225000	/Users/daviduniack/Desktop/ECE118/Snackoboto.X/out/Snackoboto/default.elf	3bf9cbfbb452a30a
+2068	3418	1747958158062225000	Snackoboto_default_default.elf	3bf9cbfbb452a30a
+1	2068	1747958154645250556	CMakeFiles/Snackoboto_default_default_XC32_compile.dir/Users/daviduniack/Desktop/ECE118/Snackoboto.X/LED.c.o	1c87dde6d0169004
+1	2040	1747958154645102971	CMakeFiles/Snackoboto_default_default_XC32_compile.dir/Users/daviduniack/Desktop/ECE118/Snackoboto.X/BOARD.c.o	fe84b4a1f41e75c7
+1	2061	1747958154645369474	CMakeFiles/Snackoboto_default_default_XC32_compile.dir/Users/daviduniack/Desktop/ECE118/Snackoboto.X/RC_Servo.c.o	7c3b9651cf18d857
+3419	3510	1747958158062716329	/Users/daviduniack/Desktop/ECE118/Snackoboto.X/_build/Snackoboto/default/CMakeFiles/Snackoboto_default_Bin2Hex	817fa7e5f652b700
+1	2061	1747958154644844343	CMakeFiles/Snackoboto_default_default_XC32_compile.dir/Users/daviduniack/Desktop/ECE118/Snackoboto.X/AD.c.o	8446f3fa4bd8909
+1	2041	1747958154645487933	CMakeFiles/Snackoboto_default_default_XC32_compile.dir/Users/daviduniack/Desktop/ECE118/Snackoboto.X/part1.c.o	3f5389c98607cbe6

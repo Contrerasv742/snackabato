@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/Users/daviduniack/Desktop/ECE118/Snackoboto.X/_build/Snackoboto/default",
+  "command": "/Applications/microchip/xc32/v4.60/bin/xc32-gcc -DXPRJ_default=default -I/Users/daviduniack/Desktop/ECE118/Snackoboto.X/cmake/Snackoboto/default/../../.. -x c -g -x c -c -mprocessor=32MX320F128H -fno-common -mdfp=/Users/daviduniack/.mchp_packs/Microchip/PIC32MX_DFP/1.6.369 -o CMakeFiles/Snackoboto_default_default_XC32_compile.dir/Users/daviduniack/Desktop/ECE118/Snackoboto.X/AD.c.o -c /Users/daviduniack/Desktop/ECE118/Snackoboto.X/AD.c",
+  "file": "/Users/daviduniack/Desktop/ECE118/Snackoboto.X/AD.c",
+  "output": "CMakeFiles/Snackoboto_default_default_XC32_compile.dir/Users/daviduniack/Desktop/ECE118/Snackoboto.X/AD.c.o"
+},
+{
+  "directory": "/Users/daviduniack/Desktop/ECE118/Snackoboto.X/_build/Snackoboto/default",
+  "command": "/Applications/microchip/xc32/v4.60/bin/xc32-gcc -DXPRJ_default=default -I/Users/daviduniack/Desktop/ECE118/Snackoboto.X/cmake/Snackoboto/default/../../.. -x c -g -x c -c -mprocessor=32MX320F128H -fno-common -mdfp=/Users/daviduniack/.mchp_packs/Microchip/PIC32MX_DFP/1.6.369 -o CMakeFiles/Snackoboto_default_default_XC32_compile.dir/Users/daviduniack/Desktop/ECE118/Snackoboto.X/BOARD.c.o -c /Users/daviduniack/Desktop/ECE118/Snackoboto.X/BOARD.c",
+  "file": "/Users/daviduniack/Desktop/ECE118/Snackoboto.X/BOARD.c",
+  "output": "CMakeFiles/Snackoboto_default_default_XC32_compile.dir/Users/daviduniack/Desktop/ECE118/Snackoboto.X/BOARD.c.o"
+},
+{
+  "directory": "/Users/daviduniack/Desktop/ECE118/Snackoboto.X/_build/Snackoboto/default",
+  "command": "/Applications/microchip/xc32/v4.60/bin/xc32-gcc -DXPRJ_default=default -I/Users/daviduniack/Desktop/ECE118/Snackoboto.X/cmake/Snackoboto/default/../../.. -x c -g -x c -c -mprocessor=32MX320F128H -fno-common -mdfp=/Users/daviduniack/.mchp_packs/Microchip/PIC32MX_DFP/1.6.369 -o CMakeFiles/Snackoboto_default_default_XC32_compile.dir/Users/daviduniack/Desktop/ECE118/Snackoboto.X/LED.c.o -c /Users/daviduniack/Desktop/ECE118/Snackoboto.X/LED.c",
+  "file": "/Users/daviduniack/Desktop/ECE118/Snackoboto.X/LED.c",
+  "output": "CMakeFiles/Snackoboto_default_default_XC32_compile.dir/Users/daviduniack/Desktop/ECE118/Snackoboto.X/LED.c.o"
+},
+{
+  "directory": "/Users/daviduniack/Desktop/ECE118/Snackoboto.X/_build/Snackoboto/default",
+  "command": "/Applications/microchip/xc32/v4.60/bin/xc32-gcc -DXPRJ_default=default -I/Users/daviduniack/Desktop/ECE118/Snackoboto.X/cmake/Snackoboto/default/../../.. -x c -g -x c -c -mprocessor=32MX320F128H -fno-common -mdfp=/Users/daviduniack/.mchp_packs/Microchip/PIC32MX_DFP/1.6.369 -o CMakeFiles/Snackoboto_default_default_XC32_compile.dir/Users/daviduniack/Desktop/ECE118/Snackoboto.X/RC_Servo.c.o -c /Users/daviduniack/Desktop/ECE118/Snackoboto.X/RC_Servo.c",
+  "file": "/Users/daviduniack/Desktop/ECE118/Snackoboto.X/RC_Servo.c",
+  "output": "CMakeFiles/Snackoboto_default_default_XC32_compile.dir/Users/daviduniack/Desktop/ECE118/Snackoboto.X/RC_Servo.c.o"
+},
+{
+  "directory": "/Users/daviduniack/Desktop/ECE118/Snackoboto.X/_build/Snackoboto/default",
+  "command": "/Applications/microchip/xc32/v4.60/bin/xc32-gcc -DXPRJ_default=default -I/Users/daviduniack/Desktop/ECE118/Snackoboto.X/cmake/Snackoboto/default/../../.. -x c -g -x c -c -mprocessor=32MX320F128H -fno-common -mdfp=/Users/daviduniack/.mchp_packs/Microchip/PIC32MX_DFP/1.6.369 -o CMakeFiles/Snackoboto_default_default_XC32_compile.dir/Users/daviduniack/Desktop/ECE118/Snackoboto.X/part1.c.o -c /Users/daviduniack/Desktop/ECE118/Snackoboto.X/part1.c",
+  "file": "/Users/daviduniack/Desktop/ECE118/Snackoboto.X/part1.c",
+  "output": "CMakeFiles/Snackoboto_default_default_XC32_compile.dir/Users/daviduniack/Desktop/ECE118/Snackoboto.X/part1.c.o"
+}
+]
