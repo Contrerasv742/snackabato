@@ -13,16 +13,16 @@
 #define MAX_STEP_RATE_TEST 5000  
 #define STEP_RATE_INCREMENT 50
 
-// Defines for the Servo Motors
+// Defines for the Servo Motors (Part 1)
 #define SERVO_PIN RC_PORTV04
 
-// Defines for the DC Motors
+// Defines for the DC Motors (Part 4)
 #define ENABLE_PIN          RC_PORTY07
 #define DC_DIRECTION_PIN1   PIN8
 #define DC_DIRECTION_PIN2   PIN9
 #define DC_PWM_MOTOR_PIN    PWM_PORTZ06
 
-// Defines for the Stepper Motors
+// Defines for the Stepper Motors (Part 6)
 #define STEPPER_1_ENABLE_PIN      PORTZ03_LAT
 #define STEPPER_1_DIRECTION_PIN   PORTZ04_LAT
 #define STEPPER_1_STEP_PIN        PORTZ05_LAT
@@ -70,6 +70,7 @@ int main(void) {
         uint32_t Servo_Step_Rate    = 600;
 
         // Stepper Motor Configuration
+        unsigned int Stepper_Duty_Cycle 
         Stepper_SetRate(Stepper_Step_Rate);
         Stepper_SetSteps(FORWARD, Stepper_Step_Rate);
 
