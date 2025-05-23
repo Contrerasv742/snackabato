@@ -54,38 +54,9 @@ int main(void) {
         PWM_SetDutyCycle(PWM_MOTOR_PIN, duty_cycle);
         
         // Set direction based on switch state
-//        if (1) {
-            // Direction 1
         IO_PortsWritePort(PORTZ, DIRECTION_PIN1);
         IO_PortsClearPortBits(PORTZ, DIRECTION_PIN2);
-        printf("Direction: Clockwise\r\n");
-//        } else {
-//            // Direction 2
-//            IO_PortsClearPortBits(PORTZ, DIRECTION_PIN1);
-//            IO_PortsWritePort(PORTZ, DIRECTION_PIN2);
-//            printf("Direction: Counter-Clockwise\r\n");
-//        }
         
-        // Default: All LEDs off
-        LED_SetBank(LED_BANK1, 0);
-        LED_SetBank(LED_BANK2, 0);  
-        LED_SetBank(LED_BANK3, 0);
-        
-        // Calculate how many LEDs to light (0-12 LEDs for 0-3.3V)
-        unsigned int num_leds = (pot_value * 12) / 1023;
-        
-        /* LED Display for speed */
-        if (num_leds <= 4) {
-            LED_SetBank(LED_BANK1, (1 << num_leds) - 1);
-        } else if (num_leds <= 8) {
-            LED_SetBank(LED_BANK1, ALL_LEDS_ON);
-            LED_SetBank(LED_BANK2, (1 << (num_leds - 4)) - 1);
-        } else {
-            LED_SetBank(LED_BANK1, ALL_LEDS_ON);
-            LED_SetBank(LED_BANK2, ALL_LEDS_ON);
-            LED_SetBank(LED_BANK3, (1 << (num_leds - 8)) - 1);
-        }
-
     }
     return 0;
 }
