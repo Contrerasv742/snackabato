@@ -36,9 +36,10 @@
       <itemPath>pwm.c</itemPath>
       <itemPath>IO_Ports.c</itemPath>
       <itemPath>part1.c</itemPath>
-      <itemPath>part6.c</itemPath>
       <itemPath>Stepper.c</itemPath>
       <itemPath>timers.c</itemPath>
+      <itemPath>main.c</itemPath>
+      <itemPath>part5.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -224,12 +225,68 @@
         <property key="wpo-lto" value="false"/>
       </C32Global>
       <item path="ES_CheckEvents.h" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="ES_Events.h" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="ES_Framework.h" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <item path="ES_Timers.h" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
       </item>
       <PICkit3PlatformTool>
         <property key="ADC 1" value="true"/>
@@ -348,6 +405,7 @@
         <property key="event.recorder.debugger.behavior" value="Running"/>
         <property key="event.recorder.enabled" value="false"/>
         <property key="event.recorder.scvd.files" value=""/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="lastid" value=""/>
         <property key="memories.aux" value="false"/>
@@ -383,9 +441,25 @@
         <property key="programoptions.uselvpprogramming" value="false"/>
         <property key="voltagevalue" value="3.25"/>
       </Tool>
-      <item path="part4.c" ex="true" overriding="false">
+      <item path="part1.c" ex="true" overriding="false">
       </item>
-      <item path="part6.c" ex="true" overriding="false">
+      <item path="part4.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="part5.c" ex="true" overriding="false">
       </item>
     </conf>
   </confs>
