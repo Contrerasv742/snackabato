@@ -49,10 +49,6 @@ int main(void) {
     Stepper_SetDriveMode(DRIVE_MODE);
     
     /* Pin Configuration */
-    // 1) UNO Pot Input for controlling speed
-    AD_AddPins(AD_PORTV5);
-
-    printf("Part 5 - Stepper Motor Control using H-bridge\r\n");
     
     // Variables for step timing
     uint16_t stepDelay = 100;  // Initial step delay in milliseconds
@@ -65,8 +61,6 @@ int main(void) {
     
     // Main loop
     while (1) {
-        // Read potentiometer and switch
-        uint16_t pot_value = AD_ReadADPin(AD_PORTV5);
         uint8_t switch_state = 1;  // Default to FORWARD
         
         // Map potentiometer value to step delay (faster when pot is high)

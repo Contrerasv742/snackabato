@@ -2,6 +2,12 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/Users/daviduniack/Desktop/ECE118/Snackoboto.X/main.c</file>
+            <file>file:/Users/daviduniack/Desktop/ECE118/Snackoboto.X/part5.c</file>
+            <file>file:/Users/daviduniack/Desktop/ECE118/Snackoboto.X/Stepper.c</file>
+            <file>file:/Users/daviduniack/Desktop/ECE118/Snackoboto.X/Stepper.h</file>
+            <file>file:/Users/daviduniack/Desktop/ECE118/Snackoboto.X/RC_Servo.c</file>
+        </group>
     </open-files>
 </project-private>

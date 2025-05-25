@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=BOARD.c AD.c RC_Servo.c pwm.c IO_Ports.c Stepper.c timers.c main.c
+SOURCEFILES_QUOTED_IF_SPACED=BOARD.c AD.c RC_Servo.c part4.c pwm.c IO_Ports.c Stepper.c timers.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/BOARD.o ${OBJECTDIR}/AD.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/main.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/BOARD.o.d ${OBJECTDIR}/AD.o.d ${OBJECTDIR}/RC_Servo.o.d ${OBJECTDIR}/pwm.o.d ${OBJECTDIR}/IO_Ports.o.d ${OBJECTDIR}/Stepper.o.d ${OBJECTDIR}/timers.o.d ${OBJECTDIR}/main.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/BOARD.o ${OBJECTDIR}/AD.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/part4.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/timers.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/BOARD.o.d ${OBJECTDIR}/AD.o.d ${OBJECTDIR}/RC_Servo.o.d ${OBJECTDIR}/part4.o.d ${OBJECTDIR}/pwm.o.d ${OBJECTDIR}/IO_Ports.o.d ${OBJECTDIR}/Stepper.o.d ${OBJECTDIR}/timers.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/BOARD.o ${OBJECTDIR}/AD.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/timers.o ${OBJECTDIR}/main.o
+OBJECTFILES=${OBJECTDIR}/BOARD.o ${OBJECTDIR}/AD.o ${OBJECTDIR}/RC_Servo.o ${OBJECTDIR}/part4.o ${OBJECTDIR}/pwm.o ${OBJECTDIR}/IO_Ports.o ${OBJECTDIR}/Stepper.o ${OBJECTDIR}/timers.o
 
 # Source Files
-SOURCEFILES=BOARD.c AD.c RC_Servo.c pwm.c IO_Ports.c Stepper.c timers.c main.c
+SOURCEFILES=BOARD.c AD.c RC_Servo.c part4.c pwm.c IO_Ports.c Stepper.c timers.c
 
 
 
@@ -119,6 +119,12 @@ ${OBJECTDIR}/RC_Servo.o: RC_Servo.c  .generated_files/flags/default/5bc45a9ff3f0
 	@${RM} ${OBJECTDIR}/RC_Servo.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/RC_Servo.o.d" -o ${OBJECTDIR}/RC_Servo.o RC_Servo.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
+${OBJECTDIR}/part4.o: part4.c  .generated_files/flags/default/b948bba807cc9653bfc1ea2609c156e64fa3216f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/part4.o.d 
+	@${RM} ${OBJECTDIR}/part4.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/part4.o.d" -o ${OBJECTDIR}/part4.o part4.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
 ${OBJECTDIR}/pwm.o: pwm.c  .generated_files/flags/default/72a4e34e11dbb9f395064d8ab95415a75f038320 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/pwm.o.d 
@@ -143,12 +149,6 @@ ${OBJECTDIR}/timers.o: timers.c  .generated_files/flags/default/e70017c060e370d6
 	@${RM} ${OBJECTDIR}/timers.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/timers.o.d" -o ${OBJECTDIR}/timers.o timers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/main.o: main.c  .generated_files/flags/default/d50b5e7a997ba501a1c552f661398751fd35e8e6 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/main.o.d 
-	@${RM} ${OBJECTDIR}/main.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/main.o.d" -o ${OBJECTDIR}/main.o main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
 else
 ${OBJECTDIR}/BOARD.o: BOARD.c  .generated_files/flags/default/ad50c488f4a71da2c5d9883b34f4c1065ee6548b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
@@ -167,6 +167,12 @@ ${OBJECTDIR}/RC_Servo.o: RC_Servo.c  .generated_files/flags/default/9f940de6eb6e
 	@${RM} ${OBJECTDIR}/RC_Servo.o.d 
 	@${RM} ${OBJECTDIR}/RC_Servo.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/RC_Servo.o.d" -o ${OBJECTDIR}/RC_Servo.o RC_Servo.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/part4.o: part4.c  .generated_files/flags/default/fb8ed3a78120af7abaecea807c31a22c9bd886bb .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/part4.o.d 
+	@${RM} ${OBJECTDIR}/part4.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/part4.o.d" -o ${OBJECTDIR}/part4.o part4.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 ${OBJECTDIR}/pwm.o: pwm.c  .generated_files/flags/default/22e35dc301d5f4acea1c7acfaf1c1bf2aeee696d .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
@@ -191,12 +197,6 @@ ${OBJECTDIR}/timers.o: timers.c  .generated_files/flags/default/61d9672b6692f7d3
 	@${RM} ${OBJECTDIR}/timers.o.d 
 	@${RM} ${OBJECTDIR}/timers.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/timers.o.d" -o ${OBJECTDIR}/timers.o timers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/main.o: main.c  .generated_files/flags/default/ce0a74a1a9b83004dabacdb543846b4e153ba1f3 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/main.o.d 
-	@${RM} ${OBJECTDIR}/main.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/main.o.d" -o ${OBJECTDIR}/main.o main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 endif
 

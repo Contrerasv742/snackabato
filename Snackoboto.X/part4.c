@@ -25,7 +25,6 @@ int main(void) {
     /* Initialization Section */
     BOARD_Init();
     AD_Init();
-    LED_Init();
     PWM_Init();  
     
     /* Pin Configuration */
@@ -33,8 +32,6 @@ int main(void) {
     AD_AddPins(AD_PORTV5);                  
     // 2) PWM (square wave) output for DC motor
     PWM_AddPins(PWM_MOTOR_PIN);               
-    // 3) Pins for the LEDs
-    LED_AddBanks(LED_BANK1|LED_BANK2|LED_BANK3);
     
     // Configure direction control pins for the H-bridge
     IO_PortsSetPortOutputs(PORTZ, DIRECTION_PIN1);

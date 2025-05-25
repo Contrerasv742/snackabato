@@ -7,9 +7,6 @@
 #include "RC_Servo.h"
 #include "BOARD.h"
 
-// Define DRV8811_DRIVE to use that drive mode in the Stepper module
-#define DRV8811_DRIVE
-
 // Define constants for stepper testing
 #define STEPPER_STEPS 200
 #define MAX_STEP_RATE_TEST 5000  
@@ -20,23 +17,104 @@
 
 // Defines for the DC Motors (Part 4)
 #define ENABLE_PIN          RC_PORTY07
-#define DC_DIRECTION_PIN1   PIN8
-#define DC_DIRECTION_PIN2   PIN9
+#define DC_DIRECTION_PIN1   RC_PORTV03
+#define DC_DIRECTION_PIN2   RC_PORTW07
+
 #define DC_PWM_MOTOR_PIN    PWM_PORTZ06
 
-// Defines for the Stepper Motors (Part 6) <---- needs to be part 5 now
-#define STEPPER_1_ENABLE_PIN      PORTZ03_LAT
-#define STEPPER_1_DIRECTION_PIN   PORTZ04_LAT
-#define STEPPER_1_STEP_PIN        PORTZ05_LAT
-#define STEPPER_1_PWM_MOTOR_PIN   PWM_PORTZ10
+// Defines for the Stepper Motors (Part 5)
+// #define COIL1_PIN1           PORTZ03_LAT
+// #define COIL1_PIN2           PORTZ04_LAT
+// #define COIL2_PIN1           PORTZ05_LAT
+// #define COIL2_PIN2           PORTZ06_LAT
 
-#define STEPPER_2_ENABLE_PIN     PORTZ06_LAT
-#define STEPPER_2_DIRECTION_PIN  PORTZ07_LAT
-#define STEPPER_2_STEP_PIN       PORTZ08_LAT
-#define STEPPER_2_PWM_MOTOR_PIN  PWM_PORTZ12
+// #define STEPPER_1_ENABLE_PIN_A          RC_PORTZ11
+// #define STEPPER_1_ENABLE_PIN_B          RC_PORTZ09
 
-#define MAIN
-#ifdef MAIN
+// #define STEPPER_1_PWM_MOTOR_PIN_A   PWM_PORTZ11  // Define missing pin
+// #define STEPPER_1_PWM_MOTOR_PIN_B   PWM_PORTZ12
+
+//#define STEPPER_TEST
+#define DC_MOTOR_TEST
+//#define RC_SERVO_TEST
+
+#ifdef STEPPER_TEST
+int main(void) {
+    BOARD_Init();
+    AD_Init();
+    TIMERS_Init();
+    RC_Init();
+    Stepper_Init();
+    PWM_Init();
+
+    static uint32_t stepCounter = 0;
+    static uint8_t switch_state = FORWARD;
+    static uint32_t currentStepRate = 100;
+    static uint32_t numSteps = 100;
+
+    // Enable coil driver outputs
+
+    PWM_SetFrequency(PWM_1KHZ);
+    // IO_PortsSetPortOutputs(PORTZ, STEPPER_1_ENABLE_PIN_A | STEPPER_1_ENABLE_PIN_B);
+    // IO_PortsSetPortOutputs(PORTZ, COIL1_PIN1 | COIL1_PIN2 | COIL2_PIN1 | COIL2_PIN2);
+
+    Stepper_SetRate(currentStepRate);
+    Stepper_InitSteps(switch_state, numSteps);  // Start first 100 steps
+    
+    while (1) {
+
+        if (!Stepper_IsStepping()) {
+            if (Stepper_GetDirection() == FORWARD) {
+                Stepper_InitSteps(REVERSE, numSteps);
+                printf("\r\nStepping Backwards");
+            } else {
+                Stepper_InitSteps(FORWARD, numSteps);
+                printf("\r\nStepping Forwards");
+            }
+        }
+    }
+    return 0;
+}
+#endif
+
+#ifdef DC_MOTOR_TEST
+int main(void) {
+    /* Initialization Section */
+    BOARD_Init();
+    AD_Init();
+    TIMERS_Init();
+    RC_Init();
+    Stepper_Init();
+    PWM_Init();
+                  
+    // PWM(square wave) output for DC motor
+    PWM_AddPins(DC_PWM_MOTOR_PIN);   
+    IO_PortsSetPortOutputs(PORTY, ENABLE_PIN);
+    IO_WritePort(PORTY, ENABLE_PIN);
+    
+    // Configure direction control pins for the H-bridge
+    IO_PortsSetPortOutputs(PORTV, DC_DIRECTION_PIN1);
+    IO_PortsSetPortOutputs(PORTW, DC_DIRECTION_PIN2);
+    
+    // Set PWM frequency to 1KHz (default)
+    PWM_SetFrequency(PWM_1KHZ);
+    
+    while (1) {
+        uint32_t DC_Step_Rate = 100;
+        
+        unsigned int duty_cycle = (DC_Step_Rate * 1000) / 1023;
+        PWM_SetDutyCycle(PWM_MOTOR_PIN, duty_cycle);
+        
+        // Set direction
+        IO_PortsWritePort(PORTV, DC_DIRECTION_PIN1);
+        IO_PortsClearPortBits(PORTW, DC_DIRECTION_PIN2);
+        
+    }
+    return 0;
+}
+#endif
+
+#ifdef RC_SERVO_TEST
 int main(void) {
     /* Initialization Section */
     BOARD_Init();
@@ -45,65 +123,18 @@ int main(void) {
     RC_Init();
     Stepper_Init();
     
-    /* Pin Configuration */
-    AD_AddPins(AD_PORTV5);
-    
-    unsigned short int pulseTime;
-    static uint32_t stepCounter = 0;
-    static uint32_t lastStepTime = 0;
-    static uint8_t switch_state = FORWARD;
-    static uint32_t currentStepRate = 100;
-    
-    // Set the stepper start at a low rate
-    Stepper_Init();
-    Stepper_SetSteps(switch_state, currentStepRate);
-
-    // DC Motor -- Configure direction control pins for the H-bridge
-    IO_PortsSetPortOutputs(PORTZ, DC_DIRECTION_PIN1);
-    IO_PortsSetPortOutputs(PORTZ, DC_DIRECTION_PIN2);
-    
-    // Set PWM frequency to 1KHz (default)
-    PWM_SetFrequency(PWM_1KHZ);
+    RC_AddPins(RC_PORTV04);
     
     while (1) {
-        // Read potentiometer for speed control
-        uint32_t pot_value = AD_ReadADPin(AD_PORTV5);
         
-        // Manually control step rate (X steps/sec)
-        uint32_t Stepper_Step_Rate  = 600;
-        uint32_t DC_Step_Rate       = 600;
-        uint32_t Servo_Step_Rate    = 600;
-
-        // Stepper Motor Configuration
-        unsigned int Stepper_Duty_Cycle; 
-        Stepper_SetRate(Stepper_Step_Rate);
-        Stepper_SetSteps(FORWARD, Stepper_Step_Rate);
-
-        // DC Motor Configuration
-        unsigned int DC_Duty_Cycle = (pot_value * 1000) / 1023;
-        printf("DC Motor duty cycle = %d%%\r\n", DC_Duty_Cycle/10);
-        PWM_SetDutyCycle(DC_PWM_MOTOR_PIN, DC_Duty_Cycle);
+        // Manually control step rate (X =steps/sec)
+        uint32_t Servo_Step_Rate = 600;
         
         // Servo Motor Configuration
         unsigned int Servo_Duty_Cycle = 1000 + (Servo_Step_Rate * 1000) / 1023;
-        RC_SetPulseTime(RC_PORTV04, pulseTime);
-        
-        // Check if it's time to take a step 
-        if (TIMERS_GetTime() - lastStepTime >= (1000 / Stepper_Step_Rate)) {
-            lastStepTime = TIMERS_GetTime();
-            
-            Stepper_SetSteps(switch_state, currentStepRate);
-            Stepper_StartSteps();
-            
-            // Toggle direction every 100 steps
-            (stepCounter)++;
-            if (stepCounter >= 100) {
-                stepCounter = 0;
-                printf("Direction changed to: %s\r\n", switch_state ? "FORWARD" : "REVERSE");
-            }
-        }
+        RC_SetPulseTime(RC_PORTV04, Servo_Duty_Cycle);
+        RC_GetPulseTime(RC_PORTV04);
     }
     return 0;
 }
-
 #endif

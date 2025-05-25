@@ -120,6 +120,7 @@ int8_t Stepper_Init(void)
     TRIS_COIL_B_DIRECTION = 0;
     TRIS_COIL_B_DIRECTION_INV = 0;
     TRIS_COIL_B_ENABLE = 0;
+    
     // Calculate overflow time and prescalar
     overflowPeriod = CalculateOverflowPeriod(stepsPerSecondRate);
 
