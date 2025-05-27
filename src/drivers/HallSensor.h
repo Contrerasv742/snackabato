@@ -30,6 +30,11 @@ int HallSensor_Init(void);
  * @return Unsigned Short corresponding to ADC Readings from Hall Sensor */
 unsigned int HallSensor_GetReading(void);
 
+/**
+ * @Function int HallSensor_GetRPM(void)
+ * @param None
+ * @return Unsigned int corresponding to Calculated RPM of wheel */
+ unsigned int HallSensor_GetRPM(void);
 
 #endif	/* HALLSENSOR_H */
 

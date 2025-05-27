@@ -9,12 +9,14 @@
 #include <BOARD.h>
 #include <stdio.h>
 #include <AD.h>
+#include <ES_Timers.h>
 #include "HallSensor.h"
 
 /*******************************************************************************
  * PUBLIC #DEFINES                                                            *
  ******************************************************************************/
 #define HALL_SENSOR_PIN AD_PORTV4
+#define HALL_TRHESHOLD 111
 
 /*******************************************************************************
  * PUBLIC FUNCTIONS                                                           *
@@ -39,5 +41,26 @@ unsigned int HallSensor_GetReading(void){
         ;
     }
     return AD_ReadADPin(HALL_SENSOR_PIN);
+}
+
+/**
+ * @Function int HallSensor_GetRPM(void)
+ * @param None
+ * @return Unsigned int corresponding to Calculated RPM of wheel */
+unsigned int HallSensor_GetRPM(void){
+    static unsigned int RPM;
+    static prevDetect = FALSE;
+    static uint32_t previousTime;
+    uint32_t currentTime = ES_Timer_GetTime();
+    unsigned int hallReading = HallSensor_GetReading();
+    if (hallReading > threshold && prevDetect == FALSE){
+        RPM = (60000) / (currentTime - previousTime)
+        previousTime = currentTime;
+        prevDetect = TRUE;
+    }
+    else if (hallReading < threshold && prevDetect == TRUE){
+        prevDetect = FALSE;
+    }
+    return RPM;
 }
 
