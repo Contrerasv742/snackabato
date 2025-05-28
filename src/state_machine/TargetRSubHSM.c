@@ -1,5 +1,5 @@
 /*
- * File: SearchingSubHSM.c
+ * File: TargetRSubHSM.c
  * Author: Andy Ly
  */
 
@@ -10,9 +10,11 @@
 
 #include "ES_Configure.h"
 #include "ES_Framework.h"
+#include "ES_Timers.h"
 #include "BOARD.h"
 #include "SnackobotoHSM.h"
-#include "SearchingSubHSM.h"
+#include "TargetRSubHSM.h"
+#include "TargetRAimSubHSM.h"
 #include "Snackoboto.h"
 
 /*******************************************************************************
@@ -20,19 +22,19 @@
  ******************************************************************************/
 typedef enum {
     InitPSubState,
-    Sweep_Right,
-    Sweep_Left,
-} SearchingSubHSMState_t;
+    Target_Aim,
+    Target_Fire,
+} TargetRSubHSMState_t;
 
 static const char *StateNames[] = {
-    "Sweep_Right",
-    "Sweep_Left",
+    "InitPSubState",
+    "Target_Aim",
+    "Target_Fire",
 };
 
-#define STEP_INTERVAL 1
-#define TIME_INTERVAL 200
-#define ANGLE_PER_STEP 1
-#define MAX_YAW 180
+#define FLYWHEEL_SPEED 300
+#define FIRE_DELAY 1000
+
 
 
 /*******************************************************************************
@@ -47,9 +49,9 @@ static const char *StateNames[] = {
 /* You will need MyPriority and the state variable; you may need others as well.
  * The type of state variable should match that of enum in header file. */
 
-static SearchingSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
+static TargetRSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
 static uint8_t MyPriority;
-static uint8_t YawDisplacement;
+static int fired = FALSE;
 
 
 /*******************************************************************************
@@ -57,7 +59,7 @@ static uint8_t YawDisplacement;
  ******************************************************************************/
 
 /**
- * @Function InitSearchingSubHSM(uint8_t Priority)
+ * @Function InitTargetRSubHSM(uint8_t Priority)
  * @param Priority - internal variable to track which event queue to use
  * @return TRUE or FALSE
  * @brief This will get called by the framework at the beginning of the code
@@ -66,12 +68,12 @@ static uint8_t YawDisplacement;
  *        to rename this to something appropriate.
  *        Returns TRUE if successful, FALSE otherwise
  * @author J. Edward Carryer, 2011.10.23 19:25 */
-uint8_t InitSearchingSubHSM(void)
+uint8_t InitTargetRSubHSM(void)
 {
     ES_Event returnEvent;
 
     CurrentState = InitPSubState;
-    returnEvent = RunSearchingSubHSM(INIT_EVENT);
+    returnEvent = RunTargetRSubHSM(INIT_EVENT);
     if (returnEvent.EventType == ES_NO_EVENT) {
         return TRUE;
     }
@@ -79,7 +81,7 @@ uint8_t InitSearchingSubHSM(void)
 }
 
 /**
- * @Function RunSearchingSubHSM(ES_Event ThisEvent)
+ * @Function RunTargetRSubHSM(ES_Event ThisEvent)
  * @param ThisEvent - the event (type and param) to be responded.
  * @return Event - return event (type and param), in general should be ES_NO_EVENT
  * @brief This function is where you implement the whole of the heirarchical state
@@ -93,10 +95,10 @@ uint8_t InitSearchingSubHSM(void)
  *       not consumed as these need to pass pack to the higher level state machine.
  * @author J. Edward Carryer, 2011.10.23 19:25
  * @author Gabriel H Elkaim, 2011.10.23 19:25 */
-ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
+ES_Event RunTargetRSubHSM(ES_Event ThisEvent)
 {
     uint8_t makeTransition = FALSE; // use to flag transition
-    SearchingSubHSMState_t nextState; // <- change type to correct enum
+    TargetRSubHSMState_t nextState; // <- change type to correct enum
 
     ES_Tattle(); // trace call stack
 
@@ -109,23 +111,17 @@ ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
             // initial state
 
             // now put the machine into the actual initial state
-            nextState = SubFirstState;
+            InitTargetRAimSubHSM();
+            nextState = Target_Aim;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
         break;
 
-    case Sweep_Right: // in the first state, replace this with correct names
+    case Target_Aim: // in the first state, replace this with correct names
+        ThisEvent = RunTargetRAimSubHSM(ThisEvent);
         if (ThisEvent.EventType == ES_ENTRY){
-            Snacko_SetDirection(RIGHT);
-            ES_TIMER_Init();
-            ES_TIMER_InitTimer(0, TIME_INTERVAL);
-        }
-        if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 0){
-            Snacko_RotateRight(STEP_INTERVAL);
-            YawDisplacement += ANGLE_PER_STEP * STEP_INTERVAL;
-            ES_TIMER_Init();
-            ES_TIMER_InitTimer(0, TIME_INTERVAL);
+            
         }
         if (YawDisplacement >= MAX_YAW){
             nextState = Sweep_Left;
@@ -134,22 +130,23 @@ ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
         }
         break;
 
-    case Sweep_Left:
+    case Target_Fire:
         if (ThisEvent.EventType == ES_ENTRY){
-            Snacko_SetDirection(LEFT);
-            ES_TIMER_Init();
-            ES_TIMER_InitTimer(0, TIME_INTERVAL);
+            Snacko_SetFlywheelSpeed(FLYWHEEL_SPEED);
+            ES_Timer_Init();
+            ES_Timer_InitTimer(1, FIRE_DELAY);
         }
-        if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 0){
-            Snacko_RotateLeft(STEP_INTERVAL);
-            YawDisplacement -= ANGLE_PER_STEP * STEP_INTERVAL;
-            ES_TIMER_Init();
-            ES_TIMER_InitTimer(0, TIME_INTERVAL);
-        }
-        if (YawDisplacement <= 0){
-            nextState = Sweep_Right;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
+        if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 1){
+            if (fired == FALSE){
+                Snacko_FireCandy();
+                fired = TRUE;
+                ES_Timer_InitTimer(1, FIRE_DELAY);
+            }
+            else if (fired == TRUE){
+                Snacko_SetFlywheelSpeed(0);
+                fired = FALSE;
+                ThisEvent.EventType = CANDY_FIRED;
+            }
         }
         break;
         
@@ -159,9 +156,9 @@ ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
 
     if (makeTransition == TRUE) { // making a state transition, send EXIT and ENTRY
         // recursively call the current state with an exit event
-        RunSearchingSubHSM(EXIT_EVENT); // <- rename to your own Run function
+        RunTargetRSubHSM(EXIT_EVENT); // <- rename to your own Run function
         CurrentState = nextState;
-        RunSearchingSubHSM(ENTRY_EVENT); // <- rename to your own Run function
+        RunTargetRSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
 
     ES_Tail(); // trace call stack end

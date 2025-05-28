@@ -1,5 +1,5 @@
 /*
- * File: TargetAimSubHSM.c
+ * File: TargetRAimSubHSM.c
  * Author: Andy Ly
  */
 
@@ -10,23 +10,36 @@
 
 #include "ES_Configure.h"
 #include "ES_Framework.h"
+#include "ES_Timers.h"
 #include "BOARD.h"
 #include "SnackobotoHSM.h"
-#include "TargetSubHSM.h"
-#include "TargetAimSubHSM.h"
+#include "TargetRSubHSM.h"
+#include "TargetRAimSubHSM.h"
+#include "Snackoboto.h"
+#include "ping.h"
 
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
 typedef enum {
     InitPSubState,
-    SubFirstState,
-} TargetAimSubHSMState_t;
+    NextPeak,
+    Centering,
+    Angle,
+} TargetRAimSubHSMState_t;
 
 static const char *StateNames[] = {
     "InitPSubState",
-    "SubFirstState",
+    "NextPeak",
+    "Centering",
+    "Angle",
 };
+
+#define STEP_INTERVAL 1
+#define TIME_INTERVAL 200
+#define ANGLE_PER_STEP 1
+#define AVERAGE_CONST 5
+#define PITCH_CONST 0.05
 
 
 
@@ -42,8 +55,9 @@ static const char *StateNames[] = {
 /* You will need MyPriority and the state variable; you may need others as well.
  * The type of state variable should match that of enum in header file. */
 
-static TargetAimSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
+static TargetRAimSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
 static uint8_t MyPriority;
+static uint8_t stepCount;
 
 
 /*******************************************************************************
@@ -51,7 +65,7 @@ static uint8_t MyPriority;
  ******************************************************************************/
 
 /**
- * @Function InitTargetAimSubHSM(uint8_t Priority)
+ * @Function InitTargetRAimSubHSM(uint8_t Priority)
  * @param Priority - internal variable to track which event queue to use
  * @return TRUE or FALSE
  * @brief This will get called by the framework at the beginning of the code
@@ -60,12 +74,12 @@ static uint8_t MyPriority;
  *        to rename this to something appropriate.
  *        Returns TRUE if successful, FALSE otherwise
  * @author J. Edward Carryer, 2011.10.23 19:25 */
-uint8_t InitTargetAimSubHSM(void)
+uint8_t InitTargetRAimSubHSM(void)
 {
     ES_Event returnEvent;
 
     CurrentState = InitPSubState;
-    returnEvent = RunTargetAimSubHSM(INIT_EVENT);
+    returnEvent = RunTargetRAimSubHSM(INIT_EVENT);
     if (returnEvent.EventType == ES_NO_EVENT) {
         return TRUE;
     }
@@ -73,7 +87,7 @@ uint8_t InitTargetAimSubHSM(void)
 }
 
 /**
- * @Function RunTargetAimSubHSM(ES_Event ThisEvent)
+ * @Function RunTargetRAimSubHSM(ES_Event ThisEvent)
  * @param ThisEvent - the event (type and param) to be responded.
  * @return Event - return event (type and param), in general should be ES_NO_EVENT
  * @brief This function is where you implement the whole of the heirarchical state
@@ -87,10 +101,10 @@ uint8_t InitTargetAimSubHSM(void)
  *       not consumed as these need to pass pack to the higher level state machine.
  * @author J. Edward Carryer, 2011.10.23 19:25
  * @author Gabriel H Elkaim, 2011.10.23 19:25 */
-ES_Event RunTargetAimSubHSM(ES_Event ThisEvent)
+ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
 {
     uint8_t makeTransition = FALSE; // use to flag transition
-    TargetAimSubHSMState_t nextState; // <- change type to correct enum
+    TargetRAimSubHSMState_t nextState; // <- change type to correct enum
 
     ES_Tattle(); // trace call stack
 
@@ -103,17 +117,71 @@ ES_Event RunTargetAimSubHSM(ES_Event ThisEvent)
             // initial state
 
             // now put the machine into the actual initial state
-            nextState = SubFirstState;
+            nextState = NextPeak;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
         break;
 
-    case SubFirstState: // in the first state, replace this with correct names
-        switch (ThisEvent.EventType) {
-        case ES_NO_EVENT:
-        default: // all unhandled events pass the event back up to the next level
-            break;
+    case NextPeak:
+        if (ThisEvent.EventType == ES_ENTRY){
+            StepCount = 0;
+            ES_Timer_Init();
+            ES_Timer_InitTimer(2, TIME_INTERVAL);
+        }
+        if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 2){
+            StepCount++;
+            Snacko_RotateRight(STEP_INTERVAL);
+            Snacko_SetYawDisplacement(Snacko_GetYawDisplacement() + ANGLE_PER_STEP * STEP_INTERVAL);
+            ES_TIMER_Init();
+            ES_TIMER_InitTimer(2, TIME_INTERVAL);
+        }
+        if (ThisEvent.EventType == PEAK_L_DETECTED){
+            nextState = Centering;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+        }
+        break;
+    
+    case Centering:
+        if (ThisEvent.EventType == ES_ENTRY){
+            StepCount = StepCount / 2;
+            ES_TIMER_Init();
+            ES_Timer_InitTimer(2, TIME_INTERVAL);
+        }
+        if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 2){
+            StepCount--;
+            Snacko_RotateLeft(STEP_INTERVAL);
+            Snacko_SetYawDisplacement(Snacko_GetYawDisplacement() - ANGLE_PER_STEP * STEP_INTERVAL);
+            ES_TIMER_Init();
+            ES_TIMER_InitTimer(2, TIME_INTERVAL);
+        }
+        if (StepCount <= 0){
+            nextState = Angle;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+        }
+        break;
+
+    case Angle:
+        if (ThisEvent.EventType == ES_ENTRY){
+            static unsigned short total = 0;
+            static uint8_t count = 0;
+            ES_TIMER_Init();
+            ES_Timer_InitTimer(2, TIME_INTERVAL);
+        }
+        if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 2){
+            count++;
+            total += Ping_GetDistance();
+            ES_TIMER_Init();
+            ES_TIMER_InitTimer(2, TIME_INTERVAL);
+        }
+        if (count >= AVERAGE_CONST){
+            unsigned short averageDist = total / count;
+            Snacko_SetPitch(averageDist * PITCH_CONST);
+            total = 0;
+            count = 0;
+            ThisEvent.EventType = AIMED;
         }
         break;
         
@@ -123,9 +191,9 @@ ES_Event RunTargetAimSubHSM(ES_Event ThisEvent)
 
     if (makeTransition == TRUE) { // making a state transition, send EXIT and ENTRY
         // recursively call the current state with an exit event
-        RunTargetAimSubHSM(EXIT_EVENT); // <- rename to your own Run function
+        RunTargetRAimSubHSM(EXIT_EVENT); // <- rename to your own Run function
         CurrentState = nextState;
-        RunTargetAimSubHSM(ENTRY_EVENT); // <- rename to your own Run function
+        RunTargetRAimSubHSM(ENTRY_EVENT); // <- rename to your own Run function
     }
 
     ES_Tail(); // trace call stack end

@@ -19,14 +19,23 @@
  ******************************************************************************/
 typedef enum {
     InitPSubState,
-    SubFirstState,
+    Obstacle_Aim,
+    Obstacle_Fire,
 } ObstacleSubHSMState_t;
 
 static const char *StateNames[] = {
     "InitPSubState",
-    "SubFirstState",
+    "Obstacle_Aim",
+    "Obstacle_Fire",
 };
 
+#define FLYWHEEL_SPEED 300
+#define FIRE_DELAY 1000
+#define STEP_INTERVAL 1
+#define TIME_INTERVAL 200
+#define ANGLE_PER_STEP 1
+#define CENTERING_STEPS 5
+#define OBSTACLE_PITCH 0
 
 
 /*******************************************************************************
@@ -43,6 +52,7 @@ static const char *StateNames[] = {
 
 static ObstacleSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
 static uint8_t MyPriority;
+static uint8_t StepCount;
 
 
 /*******************************************************************************
@@ -102,17 +112,57 @@ ES_Event RunObstacleSubHSM(ES_Event ThisEvent)
             // initial state
 
             // now put the machine into the actual initial state
-            nextState = SubFirstState;
+            nextState = Obstacle_Aim;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
         break;
 
-    case SubFirstState: // in the first state, replace this with correct names
-        switch (ThisEvent.EventType) {
-        case ES_NO_EVENT:
-        default: // all unhandled events pass the event back up to the next level
-            break;
+    case Obstacle_Aim: // in the first state, replace this with correct names
+        //ThisEvent = RunObstacleAimSubHSM(ThisEvent);
+        if (ThisEvent.EventType == ES_ENTRY){
+            StepCount = 0;
+            Snacko_SetPitch(OBSTACLE_PITCH);
+            ES_TIMER_Init();
+            ES_Timer_InitTimer(5, TIME_INTERVAL);
+        }
+        if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 5){
+            StepCount++;
+            if (Snacko_GetDirection() == RIGHT){
+                Snacko_RotateLeft(STEP_INTERVAL);
+                Snacko_SetYawDisplacement(Snacko_GetYawDisplacement() - ANGLE_PER_STEP * STEP_INTERVAL);
+            }
+            else{
+                Snacko_RotateRight(STEP_INTERVAL);
+                Snacko_SetYawDisplacement(Snacko_GetYawDisplacement() + ANGLE_PER_STEP * STEP_INTERVAL);
+            }
+            ES_TIMER_Init();
+            ES_TIMER_InitTimer(5, TIME_INTERVAL);
+        }
+        if (StepCount >= 5){
+            nextState = Obstacle_Fire;
+            makeTransition = TRUE;
+            ThisEvent.EventType = ES_NO_EVENT;
+        }
+        break;
+
+    case Obstacle_Fire:
+        if (ThisEvent.EventType == ES_ENTRY){
+            Snacko_SetFlywheelSpeed(FLYWHEEL_SPEED);
+            ES_Timer_Init();
+            ES_Timer_InitTimer(5, FIRE_DELAY);
+        }
+        if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 5){
+            if (fired == FALSE){
+                Snacko_FireCandy();
+                fired = TRUE;
+                ES_Timer_InitTimer(5, FIRE_DELAY);
+            }
+            else if (fired == TRUE){
+                Snacko_SetFlywheelSpeed(0);
+                fired = FALSE;
+                ThisEvent.EventType = CANDY_FIRED;
+            }
         }
         break;
         

@@ -14,10 +14,12 @@
  #include "SnackobotoHSM.h"
  #include "CalibrationSubHSM.h"
  #include "SearchingSubHSM.h"
- #include "TargetSubHSM.h"
+ #include "TargetRSubHSM.h"
+ #include "TargetLSubHSM"
  #include "ObstacleSubHSM.h"
  #include "EventChecker.h"
  #include "ES_Timers.h"
+ #include "Snackoboto.h"
  #include <stdio.h>
  /*******************************************************************************
   * PRIVATE #DEFINES                                                            *
@@ -33,7 +35,8 @@
      InitPState,
      Calirbation,
      Searching,
-     Target,
+     TargetR,
+     TargetL,
      Obstacle,
  } SnackoHSMState_t; // <- For Tattletale, keep the "State_t" on the end of the enum type name.
  
@@ -41,9 +44,13 @@
      "InitPState",
      "Calibration",
      "Searching",
-     "Target",
+     "TargetR",
+     "TargetL",
      "Obstacle",
  };
+
+ #define STEP_INTERVAL 1
+ #define TIME_INTERVAL 200
  
  
  /*******************************************************************************
@@ -141,16 +148,30 @@
          break;
      
      case Calibration:
-         ThisEvent = RunCalibrationSubHSM(ThisEvent);
+         //ThisEvent = RunCalibrationSubHSM(ThisEvent);
          if (ThisEvent.EventType == ES_ENTRY){
-             
+             ES_Timer_Init();
+             ES_Timer_InitTimer(6, TIME_INTERVAL);
          }
+         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 6){
+            Snacko_PitchDown(STEP_INTERVAL);
+            ES_TIMER_Init();
+            ES_TIMER_InitTimer(6, TIME_INTERVAL);
+         }
+         if (ThisEvent.EventType == TAPE_DETECTED){
+             //Pitch Up + Reset Pitch?
+             nextState = Searching;
+             makeTransition = TRUE;
+             ThisEvent.EventType = ES_NO_EVENT;
+         }
+         /*
          if (ThisEvent.EventType == CALIBRATED)
          {
              nextState = Searching;
              makeTransition = TRUE;
              ThisEvent.EventType = ES_NO_EVENT;
          }
+         */
          break;
  
      case Searching:
@@ -158,25 +179,48 @@
          if (ThisEvent.EventType == ES_ENTRY){
              
          }
-         if (ThisEvent.EventType == TARGET_DETECTED){
-             nextState = Target;
+         if (ThisEvent.EventType == PEAK_R_DETECTED){
+             InitTargetRSubHSM();
+             nextState = TargetR;
+             makeTransition = TRUE;
+             ThisEvent.EventTye = ES_NO_EVENT;
+         }
+         if (ThisEvent.EventType == PEAK_L_DETECTED){
+             InitTargetLSubHSM();
+             nextState = TargetL;
              makeTransition = TRUE;
              ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == OBSTACLE_DETECTED){
+             InitObstacleSubHSM();
              nextState = Obstacle;
              makeTransition = TRUE;
              ThisEvent.EventType = ES_NO_EVENT;
          }
          break;
      
-     case Target:
-         ThisEvent = RunTargetSubHSM(ThisEvent);
+     case TargetR:
+         ThisEvent = RunTargetRSubHSM(ThisEvent);
          if (ThisEvent.EventType == ES_ENTRY){
 
              ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == CANDY_FIRED){
+             //InitSearchingSubHSM();
+             nextState = Searching;
+             makeTransition = TRUE;
+             ThisEvent.EventType = ES_NO_EVENT;
+         }
+         break;
+
+     case TargetL:
+         ThisEvent = RunTargetLSubHSM(ThisEvent);
+         if (ThisEvent.EventType == ES_ENTRY){
+
+             ThisEvent.EventType = ES_NO_EVENT;
+         }
+         if (ThisEvent.EventType == CANDY_FIRED){
+             //InitSearchingSubHSM();
              nextState = Searching;
              makeTransition = TRUE;
              ThisEvent.EventType = ES_NO_EVENT;
@@ -190,6 +234,7 @@
              ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == CANDY_FIRED){
+             //InitSearchingSubHSM();
              nextState = Searching;
              makeTransition = TRUE;
              ThisEvent.EventType = ES_NO_EVENT;

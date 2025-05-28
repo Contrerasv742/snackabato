@@ -1,10 +1,10 @@
 /*
- * File: SearchingSubHSM.h
+ * File: TargetLAimSubHSM.h
  * Author: Andy Ly
  */
 
-#ifndef SEARCHING_SUB_HSM_H  // <- This should be changed to your own guard on both
-#define SEARCHING_SUB_HSM_H  //    of these lines
+#ifndef TARGET_L_AIM_SUB_HSM_H  // <- This should be changed to your own guard on both
+#define TARGET_L_AIM_SUB_HSM_H  //    of these lines
 
 
 /*******************************************************************************
@@ -28,7 +28,7 @@
  ******************************************************************************/
 
 /**
- * @Function InitSearchingSubHSM(void)
+ * @Function InitTargetLAimSubHSM(void)
  * @param Priority - internal variable to track which event queue to use
  * @return TRUE or FALSE
  * @brief This will get called by the framework at the beginning of the code
@@ -37,10 +37,10 @@
  *        to rename this to something appropriate.
  *        Returns TRUE if successful, FALSE otherwise
  * @author J. Edward Carryer, 2011.10.23 19:25 */
-uint8_t InitSearchingSubHSM(void);
+uint8_t InitTargetLAimSubHSM(void);
 
 /**
- * @Function RunSearchingSubHSM(ES_Event ThisEvent)
+ * @Function RunTargetLAimSubHSM(ES_Event ThisEvent)
  * @param ThisEvent - the event (type and param) to be responded.
  * @return Event - return event (type and param), in general should be ES_NO_EVENT
  * @brief This function is where you implement the whole of the heirarchical state
@@ -54,6 +54,6 @@ uint8_t InitSearchingSubHSM(void);
  *       not consumed as these need to pass pack to the higher level state machine.
  * @author J. Edward Carryer, 2011.10.23 19:25
  * @author Gabriel H Elkaim, 2011.10.23 19:25 */
-ES_Event RunSearchingSubHSM(ES_Event ThisEvent);
+ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent);
 
-#endif /* SEARCHING_SUB_HSM_H */
+#endif /* TARGET_L_AIM_SUB_HSM_H */

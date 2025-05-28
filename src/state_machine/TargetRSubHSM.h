@@ -1,10 +1,10 @@
 /*
- * File: TargetSubHSM.h
+ * File: TargetRSubHSM.h
  * Author: Andy Ly
  */
 
-#ifndef TARGET_SUB_HSM_H  // <- This should be changed to your own guard on both
-#define TARGET_SUB_HSM_H  //    of these lines
+#ifndef TARGET_R_SUB_HSM_H  // <- This should be changed to your own guard on both
+#define TARGET_R_SUB_HSM_H  //    of these lines
 
 
 /*******************************************************************************
@@ -37,7 +37,7 @@
  *        to rename this to something appropriate.
  *        Returns TRUE if successful, FALSE otherwise
  * @author J. Edward Carryer, 2011.10.23 19:25 */
-uint8_t InitTargetSubHSM(void);
+uint8_t InitTargetRSubHSM(void);
 
 /**
  * @Function RunTargetSubHSM(ES_Event ThisEvent)
@@ -54,6 +54,6 @@ uint8_t InitTargetSubHSM(void);
  *       not consumed as these need to pass pack to the higher level state machine.
  * @author J. Edward Carryer, 2011.10.23 19:25
  * @author Gabriel H Elkaim, 2011.10.23 19:25 */
-ES_Event RunTargetSubHSM(ES_Event ThisEvent);
+ES_Event RunTargetRSubHSM(ES_Event ThisEvent);
 
-#endif /* TARGET_SUB_HSM_H */
+#endif /* TARGET_R_SUB_HSM_H */

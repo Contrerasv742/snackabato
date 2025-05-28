@@ -47,7 +47,9 @@
      TAPE_DETECTED,
      TAPE_LOST,
      CALIBRATED,
-     TARGET_DETECTED,
+     PEAK_R_DETECTED,
+     PEAK_L_DETECTED,
+     AIMED,
      OBSTACLE_DETECTED,
      CANDY_FIRED,
      /* User-defined events end here */
@@ -68,7 +70,9 @@
      "TAPE_DETECTED",
      "TAPE_LOST",
      "CALIBRATED",
-     "TARGET_DETECTED",
+     "PEAK_R_DETECTED",
+     "PEAK_L_DETECTED",
+     "AIMED",
      "OBSTACLE_DETECTED",
      "CANDY_FIRED",
      "NUMBEROFEVENTS",
@@ -83,20 +87,20 @@
  
  /****************************************************************************/
  // This is the list of event checking functions
- #define EVENT_CHECK_LIST  CheckLightLevel, BumperState
+ #define EVENT_CHECK_LIST  CheckHallReading, CheckTapeReading, CheckIRPeak, CheckObstacle
  
  /****************************************************************************/
  // These are the definitions for the post functions to be executed when the
  // corresponding timer expires. All 16 must be defined. If you are not using
  // a timers, then you can use TIMER_UNUSED
  #define TIMER_UNUSED ((pPostFunc)0)
- #define TIMER0_RESP_FUNC PostRoachHSM // Replace TIMER_UNUSED with e.g.,PostTemplateService 
- #define TIMER1_RESP_FUNC PostRoachHSM
- #define TIMER2_RESP_FUNC PostRoachHSM
- #define TIMER3_RESP_FUNC PostRoachHSM
- #define TIMER4_RESP_FUNC PostRoachHSM
- #define TIMER5_RESP_FUNC TIMER_UNUSED
- #define TIMER6_RESP_FUNC TIMER_UNUSED
+ #define TIMER0_RESP_FUNC PostSnackoHSM // Replace TIMER_UNUSED with e.g.,PostTemplateService 
+ #define TIMER1_RESP_FUNC PostSnackoHSM
+ #define TIMER2_RESP_FUNC PostSnackoHSM
+ #define TIMER3_RESP_FUNC PostSnackoHSM
+ #define TIMER4_RESP_FUNC PostSnackoHSM
+ #define TIMER5_RESP_FUNC PostSnackoHSM
+ #define TIMER6_RESP_FUNC PostSnackoHSM
  #define TIMER7_RESP_FUNC TIMER_UNUSED
  #define TIMER8_RESP_FUNC TIMER_UNUSED
  #define TIMER9_RESP_FUNC TIMER_UNUSED
@@ -126,7 +130,7 @@
  /****************************************************************************/
  // This macro determines that nuber of services that are *actually* used in
  // a particular application. It will vary in value from 1 to MAX_NUM_SERVICES
- #define NUM_SERVICES 4
+ #define NUM_SERVICES 8
  
  /****************************************************************************/
  // These are the definitions for Service 0, the lowest priority service
@@ -146,11 +150,11 @@
  // These are the definitions for Service 1
  #if NUM_SERVICES > 1
  // the header file with the public fuction prototypes
- #define SERV_1_HEADER "RoachHSM.h"
+ #define SERV_1_HEADER "SnackobotoHSM.h"
  // the name of the Init function
- #define SERV_1_INIT InitRoachHSM
+ #define SERV_1_INIT InitSnackoHSM
  // the name of the run function
- #define SERV_1_RUN RunRoachHSM
+ #define SERV_1_RUN RunSnackoHSM
  // How big should this services Queue be?
  #define SERV_1_QUEUE_SIZE 3
  #endif
@@ -158,11 +162,11 @@
  // These are the definitions for Service 2
  #if NUM_SERVICES > 2
  // the header file with the public fuction prototypes
- #define SERV_2_HEADER "RunningSubHSM.h"
+ #define SERV_2_HEADER "SearchingSubHSM.h"
  // the name of the Init function
- #define SERV_2_INIT InitRunningSubHSM
+ #define SERV_2_INIT InitSearchingSubHSM
  // the name of the run function
- #define SERV_2_RUN RunRunningSubHSM
+ #define SERV_2_RUN RunSearchingSubHSM
  // How big should this services Queue be?
  #define SERV_2_QUEUE_SIZE 3
  #endif
@@ -173,11 +177,11 @@
  // These are the definitions for Service 3
  #if NUM_SERVICES > 3
  // the header file with the public fuction prototypes
- #define SERV_3_HEADER "HidingSubHSM.h"
+ #define SERV_3_HEADER "TargetRSubHSM.h"
  // the name of the Init function
- #define SERV_3_INIT InitHidingSubHSM
+ #define SERV_3_INIT InitTargetRSubHSM
  // the name of the run function
- #define SERV_3_RUN RunHidingSubHSM
+ #define SERV_3_RUN RunTargetRSubHSM
  // How big should this services Queue be?
  #define SERV_3_QUEUE_SIZE 3
  #endif
@@ -186,11 +190,11 @@
  // These are the definitions for Service 4
  #if NUM_SERVICES > 4
  // the header file with the public fuction prototypes
- #define SERV_4_HEADER "TestService.h"
+ #define SERV_4_HEADER "TargetLSubHSM.h"
  // the name of the Init function
- #define SERV_4_INIT TestServiceInit
+ #define SERV_4_INIT InitTargetLSubHSM
  // the name of the run function
- #define SERV_4_RUN TestServiceRun
+ #define SERV_4_RUN RunTargetLSubHSM
  // How big should this services Queue be?
  #define SERV_4_QUEUE_SIZE 3
  #endif
@@ -199,11 +203,11 @@
  // These are the definitions for Service 5
  #if NUM_SERVICES > 5
  // the header file with the public fuction prototypes
- #define SERV_5_HEADER "TestService.h"
+ #define SERV_5_HEADER "ObstacleSubHSM.h"
  // the name of the Init function
- #define SERV_5_INIT TestServiceInit
+ #define SERV_5_INIT InitObstacleSubHSM
  // the name of the run function
- #define SERV_5_RUN TestServiceRun
+ #define SERV_5_RUN RunObstacleSubHSM
  // How big should this services Queue be?
  #define SERV_5_QUEUE_SIZE 3
  #endif
@@ -212,11 +216,11 @@
  // These are the definitions for Service 6
  #if NUM_SERVICES > 6
  // the header file with the public fuction prototypes
- #define SERV_6_HEADER "TestService.h"
+ #define SERV_6_HEADER "TargetRAimSubHSM.h"
  // the name of the Init function
- #define SERV_6_INIT TestServiceInit
+ #define SERV_6_INIT InitTargetRAimSubHSM
  // the name of the run function
- #define SERV_6_RUN TestServiceRun
+ #define SERV_6_RUN RunTargetRAimSubHSM
  // How big should this services Queue be?
  #define SERV_6_QUEUE_SIZE 3
  #endif
@@ -225,11 +229,11 @@
  // These are the definitions for Service 7
  #if NUM_SERVICES > 7
  // the header file with the public fuction prototypes
- #define SERV_7_HEADER "TestService.h"
+ #define SERV_7_HEADER "TargetLAimSubHSM.h"
  // the name of the Init function
- #define SERV_7_INIT TestServiceInit
+ #define SERV_7_INIT InitTargetLAimSubHSM
  // the name of the run function
- #define SERV_7_RUN TestServiceRun
+ #define SERV_7_RUN RunTargetLAimSubHSM
  // How big should this services Queue be?
  #define SERV_7_QUEUE_SIZE 3
  #endif
