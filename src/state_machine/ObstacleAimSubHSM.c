@@ -20,7 +20,7 @@
  ******************************************************************************/
 typedef enum {
     InitPSubState,
-    SubFirstState,
+    Centering,
 } ObstacleAimSubHSMState_t;
 
 static const char *StateNames[] = {

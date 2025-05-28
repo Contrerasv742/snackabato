@@ -123,7 +123,7 @@ ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 0){
             Snacko_RotateRight(STEP_INTERVAL);
-            YawDisplacement += ANGLE_PER_STEP * STEP_INTERVAL;
+            Snacko_SetYawDisplacement(Snacko_GetYawDisplacement() + ANGLE_PER_STEP * STEP_INTERVAL);
             ES_TIMER_Init();
             ES_TIMER_InitTimer(0, TIME_INTERVAL);
         }
@@ -142,7 +142,7 @@ ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 0){
             Snacko_RotateLeft(STEP_INTERVAL);
-            YawDisplacement -= ANGLE_PER_STEP * STEP_INTERVAL;
+            Snacko_SetYawDisplacement(Snacko_GetYawDisplacement() - ANGLE_PER_STEP * STEP_INTERVAL);
             ES_TIMER_Init();
             ES_TIMER_InitTimer(0, TIME_INTERVAL);
         }

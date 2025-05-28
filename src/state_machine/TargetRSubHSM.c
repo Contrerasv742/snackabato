@@ -123,8 +123,8 @@ ES_Event RunTargetRSubHSM(ES_Event ThisEvent)
         if (ThisEvent.EventType == ES_ENTRY){
             
         }
-        if (YawDisplacement >= MAX_YAW){
-            nextState = Sweep_Left;
+        if (ThisEvent.EventType == AIMED){
+            nextState = Target_Fire;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }

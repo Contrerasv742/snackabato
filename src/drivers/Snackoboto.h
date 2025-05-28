@@ -44,7 +44,7 @@ int Snacko_RotateRight(unsigned int steps);
  * @Function Snacko_PitchDown(unsigned in steps)
  * @param None
  * @return SUCCESS or ERROR
- * @brief Pithces Snackoboto */
+ * @brief Pithces Snackoboto Down*/
 int Snacko_PitchDown(unsigned int steps);
 
 /**
@@ -52,7 +52,7 @@ int Snacko_PitchDown(unsigned int steps);
  * APPROXIMATE_ANGLE = ANGLE - (ANGLE % RESOLUTION)
  * @param None
  * @return SUCCESS or ERROR
- * @brief Pithces Snackoboto */
+ * @brief Pithces Snackoboto to Specified Angle*/
 int Snacko_SetPitch(int angle);
 
 /**
