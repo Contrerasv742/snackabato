@@ -10,6 +10,9 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>../enmoscos-master-projects/projects/Lab2/lab2.X</sourceRootElem>
+                <sourceRootElem>../include</sourceRootElem>
+                <sourceRootElem>../src</sourceRootElem>
+                <sourceRootElem>../../../Downloads/ece118_files/ece118_base</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

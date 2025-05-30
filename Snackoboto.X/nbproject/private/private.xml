@@ -3,11 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/daviduniack/Desktop/ECE118/Snackoboto.X/main.c</file>
-            <file>file:/Users/daviduniack/Desktop/ECE118/Snackoboto.X/part5.c</file>
-            <file>file:/Users/daviduniack/Desktop/ECE118/Snackoboto.X/Stepper.c</file>
-            <file>file:/Users/daviduniack/Desktop/ECE118/Snackoboto.X/Stepper.h</file>
-            <file>file:/Users/daviduniack/Desktop/ECE118/Snackoboto.X/RC_Servo.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/drivers/Snackoboto.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/drivers/AD.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/framework/ES_Timers.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/app/main.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/drivers/HallSensor.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/state_machine/TargetLAimSubHSM.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/drivers/RC_Servo.c</file>
         </group>
     </open-files>
 </project-private>

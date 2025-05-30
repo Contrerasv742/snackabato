@@ -97,4 +97,18 @@ void Snacko_SetYawDisplacement(int angle);
  * @brief Gets Status Variable of Yaw Displacement*/
 int Snacko_GetYawDisplacement(void);
 
+/**
+ * @Function Snacko_SetPitchDispalcement(int angle)
+ * @param None
+ * @return SUCCESS or ERROR
+ * @brief Sets Status Variable of Pitch Dispalcement*/
+void Snacko_SetPitchDisplacement(double angle);
+
+/**
+ * @Function Snacko_GetPitchDisplacement(void)
+ * @param None
+ * @return Direction
+ * @brief Gets Status Variable of Pitch Displacement*/
+double Snacko_GetPitchDisplacement(void);
+
  #endif /* SNACKOBOTO_H */

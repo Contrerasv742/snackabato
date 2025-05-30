@@ -17,6 +17,7 @@
 #include "TargetLAimSubHSM.h"
 #include "Snackoboto.h"
 #include "ping.h"
+#include <stdio.h>
 
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
@@ -57,7 +58,9 @@ static const char *StateNames[] = {
 
 static TargetLAimSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
 static uint8_t MyPriority;
-static uint8_t stepCount;
+static uint8_t StepCount;
+static unsigned short total;
+static uint8_t count;
 
 
 /*******************************************************************************
@@ -133,8 +136,8 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
             StepCount++;
             Snacko_RotateLeft(STEP_INTERVAL);
             Snacko_SetYawDisplacement(Snacko_GetYawDisplacement() - ANGLE_PER_STEP * STEP_INTERVAL);
-            ES_TIMER_Init();
-            ES_TIMER_InitTimer(4, TIME_INTERVAL);
+            ES_Timer_Init();
+            ES_Timer_InitTimer(4, TIME_INTERVAL);
         }
         if (ThisEvent.EventType == PEAK_R_DETECTED){
             nextState = Centering;
@@ -146,42 +149,47 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
     case Centering:
         if (ThisEvent.EventType == ES_ENTRY){
             StepCount = StepCount / 2;
-            ES_TIMER_Init();
+            ES_Timer_Init();
             ES_Timer_InitTimer(4, TIME_INTERVAL);
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 4){
             StepCount--;
             Snacko_RotateRight(STEP_INTERVAL);
             Snacko_SetYawDisplacement(Snacko_GetYawDisplacement() + ANGLE_PER_STEP * STEP_INTERVAL);
-            ES_TIMER_Init();
-            ES_TIMER_InitTimer(4, TIME_INTERVAL);
-        }
-        if (StepCount <= 0){
-            nextState = Angle;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
+            if (StepCount <= 0){
+                nextState = Angle;
+                makeTransition = TRUE;
+                ThisEvent.EventType = ES_NO_EVENT;
+            }
+            else{
+                ES_Timer_Init();
+                ES_Timer_InitTimer(4, TIME_INTERVAL);
+            }
         }
         break;
 
     case Angle:
         if (ThisEvent.EventType == ES_ENTRY){
-            static unsigned short total = 0;
-            static uint8_t count = 0;
-            ES_TIMER_Init();
+            total = 0;
+            count = 0;
+            ES_Timer_Init();
             ES_Timer_InitTimer(4, TIME_INTERVAL);
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 4){
             count++;
             total += Ping_GetDistance();
-            ES_TIMER_Init();
-            ES_TIMER_InitTimer(4, TIME_INTERVAL);
-        }
-        if (count >= AVERAGE_CONST){
-            unsigned short averageDist = total / count;
-            Snacko_SetPitch(averageDist * PITCH_CONST);
-            total = 0;
-            count = 0;
-            ThisEvent.EventType = AIMED;
+            if (count >= AVERAGE_CONST){
+                unsigned short averageDist = total / count;
+                printf("Aiming at %f\r\n", averageDist * PITCH_CONST);
+                Snacko_SetPitch(averageDist * PITCH_CONST);
+                total = 0;
+                count = 0;
+                ThisEvent.EventType = AIMED;
+            }
+            else{
+                ES_Timer_Init();
+                ES_Timer_InitTimer(4, TIME_INTERVAL);
+            }
         }
         break;
         

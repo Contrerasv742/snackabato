@@ -12,14 +12,16 @@
  #include "EventChecker.h"
  #include "ES_Events.h"
  #include "Serial.h"
- #include "TapeSensor.h"
+ #include "ping.h"
  #include "AD.h"
+ #include "SnackobotoHSM.h"
+#include "BOARD.h"
  
  /*******************************************************************************
   * MODULE #DEFINES                                                             *
   ******************************************************************************/
- #define HIGH_THRESHOLD 111
- #define LOW_THRESHOLD 111
+ #define OBSTACLE_THRESHOLD 50
+ #define DEBOUNCE_THRESHOLD 5
  
  /*******************************************************************************
   * EVENTCHECKER_TEST SPECIFIC CODE                                                             *
@@ -66,29 +68,37 @@
   * @note Use this code as a template for your other event checkers, and modify as necessary.
   * @author Gabriel H Elkaim, 2013.09.27 09:18
   * @modified Gabriel H Elkaim/Max Dunne, 2016.09.12 20:08 */
- uint8_t CheckTapeReading(void) {
-     static ES_EventTyp_t lastEvent = TAPE_LOST;
-     ES_EventTyp_t curEvent;
-     ES_Event thisEvent;
-     uint8_t returnVal = FALSE;
-     unsigned int sensorReading = TapeSensor_GetReading();
- 
-     if (sensorReading > HIGH_THRESHOLD) {
-         curEvent = TAPE_DETECTED;
-     } else {
-         curEvent = TAPE_LOST;
-     }
-     if (curEvent != lastEvent) { // check for change from last time
-         thisEvent.EventType = curEvent;
-         returnVal = TRUE;
-         lastEvent = curEvent; // update history
- #ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-         PostTemplateService(thisEvent); // Change it to your target service's post function
- #else
-         SaveEvent(thisEvent);
- #endif   
-     }
-     return (returnVal);
+ uint8_t CheckObstacle(void) {
+    static uint8_t debounceCounter = 0;
+    static int prev = 0;
+    unsigned short distance = Ping_GetDistance();
+    uint8_t returnVal = FALSE;
+    //printf("%d\r\n", distance);
+    if (distance > OBSTACLE_THRESHOLD){
+        if (prev == 0){
+            debounceCounter = 0;
+            prev = 1;
+        }
+    }
+    if (distance < OBSTACLE_THRESHOLD && prev != 0){
+        debounceCounter++;
+        if (debounceCounter >= DEBOUNCE_THRESHOLD && prev != 0){
+            printf("Obstacle Detected at %d \r\n", distance);
+            prev = 0;
+            ES_Event thisEvent;
+            thisEvent.EventType = OBSTACLE_DETECTED;
+            #ifdef EVENTCHECKER_TEST           // keep this as is for test harness
+                SaveEvent(thisEvent);
+            #else
+                PostSnackoHSM(thisEvent); // Change it to your target service's post function
+            #endif  
+            returnVal = TRUE;
+        }
+    }
+    else{
+        debounceCounter = 0;
+    }
+    return (returnVal);
  }
  
  /* 
@@ -121,13 +131,16 @@
  void main(void) {
      BOARD_Init();
      /* user initialization code goes here */
- 
+     Ping_Init();
      // Do not alter anything below this line
      int i;
  
      printf("\r\nEvent checking test harness for %s", __FILE__);
  
      while (1) {
+         CheckObstacle();
+     }
+         /*
          if (IsTransmitEmpty()) {
              for (i = 0; i< sizeof (EventList) >> 2; i++) {
                  if (EventList[i]() == TRUE) {
@@ -138,6 +151,7 @@
              }
          }
      }
+          * */
  }
  
  void PrintEvent(void) {

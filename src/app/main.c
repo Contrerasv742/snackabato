@@ -1,11 +1,18 @@
-#include "IO_Ports.h"
-#include "AD.h"
-#include "Stepper.h"
-#include "timers.h"
+#include <IO_Ports.h>
+#include <AD.h>
+#include <Stepper.h>
+#include <timers.h>
 #include <stdio.h>
-#include "pwm.h"
-#include "RC_Servo.h"
-#include "BOARD.h"
+#include <pwm.h>
+#include <RC_Servo.h>
+#include <BOARD.h>
+#include "Snackoboto.h"
+#include "ES_Configure.h"
+#include "ES_Framework.h"
+#include "IR_Sensor.h"
+#include "HallSensor.h"
+#include "ping.h"
+#include "TapeSensor.h"
 
 // Define constants for stepper testing
 #define STEPPER_STEPS 200
@@ -35,8 +42,51 @@
 // #define STEPPER_1_PWM_MOTOR_PIN_B   PWM_PORTZ12
 
 //#define STEPPER_TEST
-#define DC_MOTOR_TEST
+//#define DC_MOTOR_TEST
 //#define RC_SERVO_TEST
+//#define MAIN
+
+#ifdef MAIN
+void main(void)
+{
+    ES_Return_t ErrorType;
+
+    BOARD_Init();
+
+    printf("Starting ES Framework Template\r\n");
+    printf("using the 2nd Generation Events & Services Framework\r\n");
+
+
+    // Your hardware initialization function calls go here
+    Snacko_Init();
+    IR_Init();
+    HallSensor_Init();
+    Ping_Init();
+    TapeSensor_Init();
+
+    // now initialize the Events and Services Framework and start it running
+    ErrorType = ES_Initialize();
+    if (ErrorType == Success) {
+        ErrorType = ES_Run();
+
+    }
+    //if we got to here, there was an error
+    switch (ErrorType) {
+    case FailedPointer:
+        printf("Failed on NULL pointer");
+        break;
+    case FailedInit:
+        printf("Failed Initialization");
+        break;
+    default:
+        printf("Other Failure: %d", ErrorType);
+        break;
+    }
+    for (;;)
+        ;
+
+};
+#endif
 
 #ifdef STEPPER_TEST
 int main(void) {
@@ -119,9 +169,7 @@ int main(void) {
     /* Initialization Section */
     BOARD_Init();
     AD_Init();
-    TIMERS_Init();
     RC_Init();
-    Stepper_Init();
     
     RC_AddPins(RC_PORTV04);
     

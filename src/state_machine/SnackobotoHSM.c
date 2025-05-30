@@ -12,10 +12,10 @@
  #include "ES_Framework.h"
  #include "BOARD.h"
  #include "SnackobotoHSM.h"
- #include "CalibrationSubHSM.h"
+ //#include "CalibrationSubHSM.h"
  #include "SearchingSubHSM.h"
  #include "TargetRSubHSM.h"
- #include "TargetLSubHSM"
+ #include "TargetLSubHSM.h"
  #include "ObstacleSubHSM.h"
  #include "EventChecker.h"
  #include "ES_Timers.h"
@@ -33,7 +33,7 @@
  
  typedef enum {
      InitPState,
-     Calirbation,
+     Calibration,
      Searching,
      TargetR,
      TargetL,
@@ -51,6 +51,7 @@
 
  #define STEP_INTERVAL 1
  #define TIME_INTERVAL 200
+ #define STARTING_PITCH 0
  
  
  /*******************************************************************************
@@ -155,11 +156,12 @@
          }
          if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 6){
             Snacko_PitchDown(STEP_INTERVAL);
-            ES_TIMER_Init();
-            ES_TIMER_InitTimer(6, TIME_INTERVAL);
+            ES_Timer_Init();
+            ES_Timer_InitTimer(6, TIME_INTERVAL);
          }
          if (ThisEvent.EventType == TAPE_DETECTED){
              //Pitch Up + Reset Pitch?
+             Snacko_SetPitchDisplacement(STARTING_PITCH);
              nextState = Searching;
              makeTransition = TRUE;
              ThisEvent.EventType = ES_NO_EVENT;
@@ -183,7 +185,7 @@
              InitTargetRSubHSM();
              nextState = TargetR;
              makeTransition = TRUE;
-             ThisEvent.EventTye = ES_NO_EVENT;
+             ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == PEAK_L_DETECTED){
              InitTargetLSubHSM();
@@ -245,9 +247,9 @@
      } // end switch on Current State
      if (makeTransition == TRUE) { // making a state transition, send EXIT and ENTRY
          // recursively call the current state with an exit event
-         RunRoachHSM(EXIT_EVENT);
+         RunSnackoHSM(EXIT_EVENT);
          CurrentState = nextState;
-         RunRoachHSM(ENTRY_EVENT);
+         RunSnackoHSM(ENTRY_EVENT);
      }
      ES_Tail(); // trace call stack end
      return ThisEvent;

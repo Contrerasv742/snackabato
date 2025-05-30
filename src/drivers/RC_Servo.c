@@ -37,7 +37,7 @@
 #include <sys/attribs.h>
 
 #include "RC_Servo.h"
-#include <Serial.h>
+#include <serial.h>
 
 
 /*******************************************************************************

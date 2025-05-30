@@ -7,9 +7,9 @@
  */
 
 #include <xc.h>
-#include <Serial.h>
+#include "serial.h"
 
-#include <BOARD.h>
+#include "BOARD.h"
 //#include <peripheral/uart.h>
 #include <sys/attribs.h> //needed to use an interrupt
 #include <stdint.h>

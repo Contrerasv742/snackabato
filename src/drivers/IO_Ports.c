@@ -9,8 +9,8 @@
 #include <xc.h>
 
 #include <BOARD.h>
-#include <Serial.h>
-#include <IO_Ports.h>
+#include <serial.h>
+#include "IO_Ports.h"
 
 
 /*******************************************************************************

@@ -8,12 +8,12 @@
  * MODULE #INCLUDE                                                             *
  ******************************************************************************/
 
- #include "ES_Configure.h"
- #include "EventChecker.h"
- #include "ES_Events.h"
- #include "Serial.h"
- #include "HallSensor.h"
- #include "AD.h"
+ #include <ES_Configure.h>
+ #include <EventChecker.h>
+ #include <ES_Events.h>
+ #include <Serial.h>
+ #include <HallSensor.h>
+ #include <AD.h>
  
  /*******************************************************************************
   * MODULE #DEFINES                                                             *
@@ -66,28 +66,7 @@
   * @author Gabriel H Elkaim, 2013.09.27 09:18
   * @modified Gabriel H Elkaim/Max Dunne, 2016.09.12 20:08 */
  uint8_t CheckHallReading(void) {
-     static ES_EventTyp_t lastEvent = TAPE_LOST;
-     ES_EventTyp_t curEvent;
-     ES_Event thisEvent;
-     uint8_t returnVal = FALSE;
-     unsigned int sensorReading = TapeSensor_GetReading();
- 
-     if (sensorReading > HIGH_THRESHOLD) {
-         curEvent = TAPE_DETECTED;
-     } else {
-         curEvent = TAPE_LOST;
-     }
-     if (curEvent != lastEvent) { // check for change from last time
-         thisEvent.EventType = curEvent;
-         returnVal = TRUE;
-         lastEvent = curEvent; // update history
- #ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-         PostTemplateService(thisEvent); // Change it to your target service's post function
- #else
-         SaveEvent(thisEvent);
- #endif   
-     }
-     return (returnVal);
+     return (0);
  }
  
  /* 

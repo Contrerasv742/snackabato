@@ -6,15 +6,15 @@
  */
 
 #include <xc.h>
-#include <BOARD.h>
+#include "BOARD.h"
 #include <stdio.h>
-#include <AD.h>
+#include "AD.h"
 #include "TapeSensor.h"
 
 /*******************************************************************************
  * PUBLIC #DEFINES                                                            *
  ******************************************************************************/
-#define TAPE_SENSOR_PIN AD_PORTV3
+#define TAPE_SENSOR_PIN AD_PORTV6
 
 /*******************************************************************************
  * PUBLIC FUNCTIONS                                                           *

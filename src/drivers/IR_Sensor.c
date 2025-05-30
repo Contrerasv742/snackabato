@@ -8,13 +8,13 @@
 #include <BOARD.h>
 #include <stdio.h>
 #include <AD.h>
-#include "IR_Sensor.h"
+#include <IR_Sensor.h>
 
 /*******************************************************************************
  * PUBLIC #DEFINES                                                            *
  ******************************************************************************/
-#define LEFT_IR_PIN AD_PORTV_5
-#define RIGHT_IR_PIN AD_PORTV_5
+#define LEFT_IR_PIN AD_PORTV7
+#define RIGHT_IR_PIN AD_PORTV8
 
 /*******************************************************************************
  * PUBLIC FUNCTIONS                                                           *

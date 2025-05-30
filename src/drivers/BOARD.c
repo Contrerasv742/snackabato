@@ -14,7 +14,7 @@
 #include <AD.h>
 #endif
 #ifndef BOARD_TEST
-#include <Serial.h>
+#include <serial.h>
 #endif
 
 
@@ -99,7 +99,7 @@ void BOARD_Init()
 
 #ifndef BOARD_TEST
     //initializes the uart to give printf capabilities
-    Serial_Init();
+    SERIAL_Init();
 #endif
 #ifndef DISABLE_ADINIT
     //starts the A/D system to ensure battery voltage monitoring

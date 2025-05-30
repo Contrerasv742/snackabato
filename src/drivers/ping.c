@@ -1,7 +1,7 @@
 #include <xc.h>
 #include <sys/attribs.h>
 #include <stdio.h>
-#include "ping.h"
+#include <ping.h>
 
 #define TRIGGER LATDbits.LATD9
 

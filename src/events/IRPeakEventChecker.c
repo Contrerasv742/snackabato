@@ -26,12 +26,13 @@
  * MODULE #INCLUDE                                                             *
  ******************************************************************************/
 
- #include "ES_Configure.h"
- #include "EventChecker.h"
- #include "ES_Events.h"
- #include "Serial.h"
- #include "IR_Sensor.h"
- #include "AD.h"
+ #include <ES_Configure.h>
+ #include <EventChecker.h>
+ #include <ES_Events.h>
+ #include <serial.h>
+ #include <IR_Sensor.h>
+ #include <AD.h>
+#include <SnackobotoHSM.h>
 
 /*******************************************************************************
  * MODULE #DEFINES                                                             *

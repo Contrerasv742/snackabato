@@ -4,18 +4,21 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>pwm.h</itemPath>
-      <itemPath>RC_Servo.h</itemPath>
-      <itemPath>ES_Framework.h</itemPath>
-      <itemPath>IO_Ports.h</itemPath>
-      <itemPath>AD.h</itemPath>
-      <itemPath>BOARD.h</itemPath>
-      <itemPath>ES_Events.h</itemPath>
-      <itemPath>ES_Timers.h</itemPath>
-      <itemPath>ES_CheckEvents.h</itemPath>
-      <itemPath>serial.h</itemPath>
-      <itemPath>Stepper.h</itemPath>
-      <itemPath>timers.h</itemPath>
+      <itemPath>../include/framework/ES_Configure.h</itemPath>
+      <itemPath>../include/drivers/HallSensor.h</itemPath>
+      <itemPath>../include/drivers/IR_Sensor.h</itemPath>
+      <itemPath>../include/drivers/Snackoboto.h</itemPath>
+      <itemPath>../include/drivers/TapeSensor.h</itemPath>
+      <itemPath>../include/drivers/ping.h</itemPath>
+      <itemPath>../include/events/EventChecker.h</itemPath>
+      <itemPath>../include/state_machine/ObstacleAimSubHSM.h</itemPath>
+      <itemPath>../include/state_machine/ObstacleSubHSM.h</itemPath>
+      <itemPath>../include/state_machine/SearchingSubHSM.h</itemPath>
+      <itemPath>../include/state_machine/SnackobotoHSM.h</itemPath>
+      <itemPath>../include/state_machine/TargetLAimSubHSM.h</itemPath>
+      <itemPath>../include/state_machine/TargetLSubHSM.h</itemPath>
+      <itemPath>../include/state_machine/TargetRAimSubHSM.h</itemPath>
+      <itemPath>../include/state_machine/TargetRSubHSM.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -29,21 +32,75 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>BOARD.c</itemPath>
-      <itemPath>AD.c</itemPath>
-      <itemPath>RC_Servo.c</itemPath>
-      <itemPath>part4.c</itemPath>
-      <itemPath>pwm.c</itemPath>
-      <itemPath>IO_Ports.c</itemPath>
-      <itemPath>part1.c</itemPath>
-      <itemPath>Stepper.c</itemPath>
-      <itemPath>timers.c</itemPath>
-      <itemPath>main.c</itemPath>
-      <itemPath>part5.c</itemPath>
+      <logicalFolder name="src" displayName="src" projectFiles="true">
+        <logicalFolder name="app" displayName="app" projectFiles="true">
+          <itemPath>../src/app/main.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="drivers" displayName="drivers" projectFiles="true">
+          <itemPath>../src/drivers/AD.c</itemPath>
+          <itemPath>../src/drivers/BOARD.c</itemPath>
+          <itemPath>../src/drivers/HallSensor.c</itemPath>
+          <itemPath>../src/drivers/IO_Ports.c</itemPath>
+          <itemPath>../src/drivers/IR_Sensor.c</itemPath>
+          <itemPath>../src/drivers/LED.c</itemPath>
+          <itemPath>../src/drivers/ping.c</itemPath>
+          <itemPath>../src/drivers/pwm.c</itemPath>
+          <itemPath>../src/drivers/RC_Servo.c</itemPath>
+          <itemPath>../src/drivers/Stepper.c</itemPath>
+          <itemPath>../src/drivers/TapeSensor.c</itemPath>
+          <itemPath>../src/drivers/Snackoboto.c</itemPath>
+          <itemPath>../../../Downloads/ece118_files/ece118_base/serial.c</itemPath>
+          <itemPath>../src/drivers/TwoStepper.c</itemPath>
+          <itemPath>../../../Downloads/ece118_files/ece118_base/timers.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="events" displayName="events" projectFiles="true">
+          <itemPath>../src/events/HallEventChecker.c</itemPath>
+          <itemPath>../src/events/IRPeakEventChecker.c</itemPath>
+          <itemPath>../src/events/TapeEventChecker.c</itemPath>
+          <itemPath>../src/events/TemplateEventChecker.c</itemPath>
+          <itemPath>../src/events/TemplateService.c</itemPath>
+          <itemPath>../src/events/ObstacleEventChecker.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="framework" displayName="framework" projectFiles="true">
+          <itemPath>../src/framework/ES_CheckEvents.c</itemPath>
+          <itemPath>../src/framework/ES_Framework.c</itemPath>
+          <itemPath>../src/framework/ES_KeyboardInput.c</itemPath>
+          <itemPath>../src/framework/ES_LookupTables.c</itemPath>
+          <itemPath>../src/framework/ES_PostList.c</itemPath>
+          <itemPath>../src/framework/ES_Queue.c</itemPath>
+          <itemPath>../src/framework/ES_TattleTale.c</itemPath>
+          <itemPath>../src/framework/ES_Timers.c</itemPath>
+          <itemPath>../src/framework/ES_TimerService.c</itemPath>
+          <itemPath>../src/framework/timers.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="motor" displayName="motor" projectFiles="true">
+          <itemPath>../src/motor/part1.c</itemPath>
+          <itemPath>../src/motor/part2.c</itemPath>
+          <itemPath>../src/motor/part4.c</itemPath>
+          <itemPath>../src/motor/part5.c</itemPath>
+          <itemPath>../src/motor/part6.c</itemPath>
+          <itemPath>../src/motor/TemplateFSM.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="state_machine"
+                       displayName="state_machine"
+                       projectFiles="true">
+          <itemPath>../src/state_machine/ObstacleAimSubHSM.c</itemPath>
+          <itemPath>../src/state_machine/ObstacleSubHSM.c</itemPath>
+          <itemPath>../src/state_machine/SearchingSubHSM.c</itemPath>
+          <itemPath>../src/state_machine/SnackobotoHSM.c</itemPath>
+          <itemPath>../src/state_machine/TargetLAimSubHSM.c</itemPath>
+          <itemPath>../src/state_machine/TargetLSubHSM.c</itemPath>
+          <itemPath>../src/state_machine/TargetRAimSubHSM.c</itemPath>
+          <itemPath>../src/state_machine/TargetRSubHSM.c</itemPath>
+        </logicalFolder>
+      </logicalFolder>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
     <Elem>../enmoscos-master-projects/projects/Lab2/lab2.X</Elem>
+    <Elem>../include</Elem>
+    <Elem>../src</Elem>
+    <Elem>../../../Downloads/ece118_files/ece118_base</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -56,10 +113,10 @@
         <platformTool>PICkit3PlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>4.60</languageToolchainVersion>
-        <platform>4</platform>
+        <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MX_DFP" vendor="Microchip" version="1.6.369"/>
+        <pack name="PIC32MX_DFP" vendor="Microchip" version="1.5.259"/>
       </packs>
       <ScriptingSettings>
       </ScriptingSettings>
@@ -88,6 +145,222 @@
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
+      <item path="../../../Downloads/ece118_files/ece118_base/timers.c"
+            ex="true"
+            overriding="false">
+      </item>
+      <item path="../include/framework/ES_Configure.h" ex="true" overriding="false">
+      </item>
+      <item path="../src/app/main.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="../src/drivers/Stepper.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="../src/events/HallEventChecker.c" ex="false" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="../src/events/TemplateEventChecker.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="../src/events/TemplateService.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="../src/framework/timers.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="../src/motor/TemplateFSM.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="../src/motor/part1.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="../src/motor/part2.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="../src/motor/part4.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="../src/motor/part5.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="../src/motor/part6.c" ex="true" overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
+      <item path="../src/state_machine/ObstacleAimSubHSM.c"
+            ex="true"
+            overriding="false">
+        <C32>
+        </C32>
+        <C32-AR>
+        </C32-AR>
+        <C32-AS>
+        </C32-AS>
+        <C32-CO>
+        </C32-CO>
+        <C32-LD>
+        </C32-LD>
+        <C32CPP>
+        </C32CPP>
+        <C32Global>
+        </C32Global>
+      </item>
       <C32>
         <property key="additional-warnings" value="false"/>
         <property key="addresss-attribute-use" value="false"/>
@@ -96,7 +369,8 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
-        <property key="extra-include-directories" value=""/>
+        <property key="extra-include-directories"
+                  value="..\..\..\Downloads\ece118_files\ece118_base;..\include\drivers;..\include\events;..\include\framework;..\include\state_machine;..\src\app;..\src\drivers;..\src\events;..\src\framework;..\src\motor;..\src\state_machine"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="false"/>
@@ -162,7 +436,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value=""/>
+        <property key="heap-size" value="128"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>
@@ -224,70 +498,6 @@
         <property key="stack-smashing" value=""/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
-      <item path="ES_CheckEvents.h" ex="true" overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="ES_Events.h" ex="true" overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="ES_Framework.h" ex="true" overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="ES_Timers.h" ex="true" overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
       <PICkit3PlatformTool>
         <property key="ADC 1" value="true"/>
         <property key="AutoSelectMemRanges" value="auto"/>
@@ -328,6 +538,7 @@
         <property key="event.recorder.debugger.behavior" value="Running"/>
         <property key="event.recorder.enabled" value="false"/>
         <property key="event.recorder.scvd.files" value=""/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="lastid" value=""/>
         <property key="memories.aux" value="false"/>
@@ -440,70 +651,6 @@
         <property key="programoptions.uselvpprogramming" value="false"/>
         <property key="voltagevalue" value="3.25"/>
       </Tool>
-      <item path="main.c" ex="true" overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="part1.c" ex="true" overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="part4.c" ex="false" overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
-      <item path="part5.c" ex="true" overriding="false">
-        <C32>
-        </C32>
-        <C32-AR>
-        </C32-AR>
-        <C32-AS>
-        </C32-AS>
-        <C32-CO>
-        </C32-CO>
-        <C32-LD>
-        </C32-LD>
-        <C32CPP>
-        </C32CPP>
-        <C32Global>
-        </C32Global>
-      </item>
     </conf>
   </confs>
 </configurationDescriptor>

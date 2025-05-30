@@ -14,12 +14,13 @@
  #include "Serial.h"
  #include "TapeSensor.h"
  #include "AD.h"
+#include "SnackobotoHSM.h"
  
  /*******************************************************************************
   * MODULE #DEFINES                                                             *
   ******************************************************************************/
- #define HIGH_THRESHOLD 111
- #define LOW_THRESHOLD 111
+ #define HIGH_THRESHOLD 500
+ #define LOW_THRESHOLD 900
  
  /*******************************************************************************
   * EVENTCHECKER_TEST SPECIFIC CODE                                                             *
@@ -72,18 +73,26 @@
      ES_Event thisEvent;
      uint8_t returnVal = FALSE;
      unsigned int sensorReading = TapeSensor_GetReading();
- 
-     if (sensorReading > HIGH_THRESHOLD) {
+     //printf("%d\r\n", sensorReading);
+     //thisEvent.EventParam = sensorReading;
+     if (sensorReading < HIGH_THRESHOLD) {
          curEvent = TAPE_DETECTED;
-     } else {
+     } 
+     else if (sensorReading > LOW_THRESHOLD){
          curEvent = TAPE_LOST;
      }
      if (curEvent != lastEvent) { // check for change from last time
+         if (curEvent == TAPE_DETECTED){
+             printf("Tape Detected Event\r\n");
+         }
+         else if (curEvent == TAPE_LOST){
+             printf("Tape Lost Event\r\n");
+         }
          thisEvent.EventType = curEvent;
          returnVal = TRUE;
          lastEvent = curEvent; // update history
  #ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-         PostTemplateService(thisEvent); // Change it to your target service's post function
+         PostSnackoHSM(thisEvent); // Change it to your target service's post function
  #else
          SaveEvent(thisEvent);
  #endif   
@@ -121,12 +130,15 @@
  void main(void) {
      BOARD_Init();
      /* user initialization code goes here */
- 
+     TapeSensor_Init();
      // Do not alter anything below this line
      int i;
  
      printf("\r\nEvent checking test harness for %s", __FILE__);
- 
+     while(1){
+         CheckTapeReading();
+     }
+     /*
      while (1) {
          if (IsTransmitEmpty()) {
              for (i = 0; i< sizeof (EventList) >> 2; i++) {
@@ -138,11 +150,12 @@
              }
          }
      }
+      * */
  }
  
  void PrintEvent(void) {
-     printf("\r\nFunc: %s\tEvent: %s\tParam: 0x%X", eventName,
-             EventNames[storedEvent.EventType], storedEvent.EventParam);
+     //printf("\r\nFunc: %s\tEvent: %s\tParam: 0x%X", eventName,
+             //EventNames[storedEvent.EventType], storedEvent.EventParam);
  }
  #endif
  

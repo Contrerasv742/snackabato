@@ -13,6 +13,8 @@
 #include "BOARD.h"
 #include "SnackobotoHSM.h"
 #include "ObstacleSubHSM.h"
+#include "Snackoboto.h"
+#include "ES_Timers.h"
 
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
@@ -53,6 +55,7 @@ static const char *StateNames[] = {
 static ObstacleSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
 static uint8_t MyPriority;
 static uint8_t StepCount;
+static int fired;
 
 
 /*******************************************************************************
@@ -122,8 +125,9 @@ ES_Event RunObstacleSubHSM(ES_Event ThisEvent)
         //ThisEvent = RunObstacleAimSubHSM(ThisEvent);
         if (ThisEvent.EventType == ES_ENTRY){
             StepCount = 0;
+            printf("Aiming at Obstacle (%f)\r\n", OBSTACLE_PITCH);
             Snacko_SetPitch(OBSTACLE_PITCH);
-            ES_TIMER_Init();
+            ES_Timer_Init();
             ES_Timer_InitTimer(5, TIME_INTERVAL);
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 5){
@@ -136,18 +140,21 @@ ES_Event RunObstacleSubHSM(ES_Event ThisEvent)
                 Snacko_RotateRight(STEP_INTERVAL);
                 Snacko_SetYawDisplacement(Snacko_GetYawDisplacement() + ANGLE_PER_STEP * STEP_INTERVAL);
             }
-            ES_TIMER_Init();
-            ES_TIMER_InitTimer(5, TIME_INTERVAL);
-        }
-        if (StepCount >= 5){
+            if (StepCount >= 5){
             nextState = Obstacle_Fire;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
+            }
+            else{
+                ES_Timer_Init();
+                ES_Timer_InitTimer(5, TIME_INTERVAL);
+            }
         }
         break;
 
     case Obstacle_Fire:
         if (ThisEvent.EventType == ES_ENTRY){
+            fired = FALSE;
             Snacko_SetFlywheelSpeed(FLYWHEEL_SPEED);
             ES_Timer_Init();
             ES_Timer_InitTimer(5, FIRE_DELAY);
