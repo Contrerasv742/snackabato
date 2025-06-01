@@ -29,7 +29,7 @@ void bNOP_delay_1us(int a) {
  * @return SUCCESS or ERROR
  * @brief initializes hardware for PingSensor with the needed interrupts */
 int Ping_Init(void) {
-    TRISDbits.TRISD9 = 0; // Set RD9 (TRIGGER) pin 7 as an output
+    TRISDbits.TRISD9 = 0; // Set RD9 (TRIGGER) pin 7 as an output (Y-8)
     
     // Configure Timer 2 *******************************
     //(as much resolution as possible consistent with > 11.68msec rollover.
@@ -109,7 +109,7 @@ volatile unsigned short fallingEdge = 0;
 void __ISR(_INPUT_CAPTURE_3_VECTOR, IPL3SOFT) __IC3Interrupt(void) {
     unsigned short timestamp = (IC3BUF & 0xFFFF); // Read 16-bit IC3BUF
     
-    if (PORTDbits.RD10) { // If input pin is HIGH, it's a rising edge
+    if (PORTDbits.RD10) { // If input pin is HIGH, it's a rising edge (Y-6))
         risingEdge = timestamp;
     } else { // Falling edge
         fallingEdge = timestamp;

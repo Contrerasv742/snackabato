@@ -16,6 +16,7 @@
  #include "AD.h"
  #include "SnackobotoHSM.h"
 #include "BOARD.h"
+#include <stdio.h>
  
  /*******************************************************************************
   * MODULE #DEFINES                                                             *

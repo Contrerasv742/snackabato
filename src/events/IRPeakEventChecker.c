@@ -32,6 +32,7 @@
  #include <serial.h>
  #include <IR_Sensor.h>
  #include <AD.h>
+#include <IO_Ports.h>
 #include <SnackobotoHSM.h>
 
 /*******************************************************************************
@@ -86,6 +87,8 @@ static ES_Event storedEvent;
  * @author Gabriel H Elkaim, 2013.09.27 09:18
  * @modified Gabriel H Elkaim/Max Dunne, 2016.09.12 20:08 */
 uint8_t CheckIRPeak(void) {
+//#define IR_DETECTORS
+#ifdef IR_DETECTORS
     static unsigned int previousReadingR = 0;       // debounced state
     static unsigned int previousReadingL = 0;
     static uint8_t debounceCounterR = 0;   // debounce counters per bumper
@@ -141,6 +144,68 @@ uint8_t CheckIRPeak(void) {
         debounceCounterL = 0;
     }
     return (returnVal);
+#endif
+    
+#define SWITCH_DETECTORS
+#ifdef SWITCH_DETECTORS
+#define SWITCH_R_TRIS PORTY07_TRIS
+#define SWITCH_L_TRIS PORTY05_TRIS
+#define SWITCH_R_BIT PORTY07_BIT
+#define SWITCH_L_BIT PORTY05_BIT
+#define UP 1
+#define DOWN 0
+    static uint8_t prevR = UP;
+    static uint8_t prevL = UP;
+    static uint8_t countR = 0;
+    static uint8_t countL = 0;
+    SWITCH_R_TRIS = 1;
+    SWITCH_L_TRIS = 1;
+    uint8_t switchR = SWITCH_R_BIT;
+    uint8_t switchL = SWITCH_L_BIT;
+    uint8_t returnVal = FALSE;
+
+    if (switchR == prevR) {
+        countR = 0;  // no change, reset count
+    } else {
+        countR++;
+        if (countR >= DEBOUNCE_THRESHOLD) {
+            countR = 0;
+            prevR ^= 1;  // flip the stable bit
+
+            ES_Event thisEvent;
+            if (switchR == DOWN) {
+                thisEvent.EventType = PEAK_R_DETECTED;
+            #ifdef EVENTCHECKER_TEST           // keep this as is for test harness
+                SaveEvent(thisEvent);
+            #else
+                PostSnackoHSM(thisEvent); // Change it to your target service's post function
+            #endif  
+            returnVal = TRUE;
+            }
+        }
+    }
+
+    if (switchL == prevL) {
+        countL = 0;  // no change, reset count
+    } else {
+        countL++;
+        if (countL >= DEBOUNCE_THRESHOLD) {
+            countL = 0;
+            prevL ^= 1;  // flip the stable bit
+
+            ES_Event thisEvent;
+            if (switchL == DOWN) {
+                thisEvent.EventType = PEAK_L_DETECTED;
+            #ifdef EVENTCHECKER_TEST           // keep this as is for test harness
+                SaveEvent(thisEvent);
+            #else
+                PostSnackoHSM(thisEvent); // Change it to your target service's post function
+            #endif  
+            returnVal = TRUE;
+            }
+        }
+    }
+#endif
 }
 
 /* 
@@ -173,22 +238,14 @@ void PrintEvent(void);
 void main(void) {
     BOARD_Init();
     /* user initialization code goes here */
-
+    
     // Do not alter anything below this line
     int i;
 
     printf("\r\nEvent checking test harness for %s", __FILE__);
 
     while (1) {
-        if (IsTransmitEmpty()) {
-            for (i = 0; i< sizeof (EventList) >> 2; i++) {
-                if (EventList[i]() == TRUE) {
-                    PrintEvent();
-                    break;
-                }
-
-            }
-        }
+        CheckIRPeak();
     }
 }
 

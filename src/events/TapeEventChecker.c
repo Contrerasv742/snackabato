@@ -15,12 +15,13 @@
  #include "TapeSensor.h"
  #include "AD.h"
 #include "SnackobotoHSM.h"
+#include <stdio.h>
  
  /*******************************************************************************
   * MODULE #DEFINES                                                             *
   ******************************************************************************/
- #define HIGH_THRESHOLD 500
- #define LOW_THRESHOLD 900
+ #define HIGH_THRESHOLD 800
+ #define LOW_THRESHOLD 500
  
  /*******************************************************************************
   * EVENTCHECKER_TEST SPECIFIC CODE                                                             *
@@ -75,18 +76,18 @@
      unsigned int sensorReading = TapeSensor_GetReading();
      //printf("%d\r\n", sensorReading);
      //thisEvent.EventParam = sensorReading;
-     if (sensorReading < HIGH_THRESHOLD) {
+     if (sensorReading > HIGH_THRESHOLD) {
          curEvent = TAPE_DETECTED;
      } 
-     else if (sensorReading > LOW_THRESHOLD){
+     else if (sensorReading < LOW_THRESHOLD){
          curEvent = TAPE_LOST;
      }
      if (curEvent != lastEvent) { // check for change from last time
          if (curEvent == TAPE_DETECTED){
-             printf("Tape Detected Event\r\n");
+             //printf("Tape Detected Event\r\n");
          }
          else if (curEvent == TAPE_LOST){
-             printf("Tape Lost Event\r\n");
+             //printf("Tape Lost Event\r\n");
          }
          thisEvent.EventType = curEvent;
          returnVal = TRUE;

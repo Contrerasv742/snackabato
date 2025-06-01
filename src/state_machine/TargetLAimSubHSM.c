@@ -36,8 +36,8 @@ static const char *StateNames[] = {
     "Angle",
 };
 
-#define STEP_INTERVAL 1
-#define TIME_INTERVAL 200
+#define STEP_INTERVAL 4
+#define TIME_INTERVAL 1000
 #define ANGLE_PER_STEP 1
 #define AVERAGE_CONST 5
 #define PITCH_CONST 0.05
@@ -135,11 +135,11 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 4){
             StepCount++;
             Snacko_RotateLeft(STEP_INTERVAL);
-            Snacko_SetYawDisplacement(Snacko_GetYawDisplacement() - ANGLE_PER_STEP * STEP_INTERVAL);
             ES_Timer_Init();
             ES_Timer_InitTimer(4, TIME_INTERVAL);
         }
         if (ThisEvent.EventType == PEAK_R_DETECTED){
+            printf("Second Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
             nextState = Centering;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
@@ -155,8 +155,8 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 4){
             StepCount--;
             Snacko_RotateRight(STEP_INTERVAL);
-            Snacko_SetYawDisplacement(Snacko_GetYawDisplacement() + ANGLE_PER_STEP * STEP_INTERVAL);
             if (StepCount <= 0){
+                printf("Centered at %f\r\n", Snacko_GetYawDisplacement());
                 nextState = Angle;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;

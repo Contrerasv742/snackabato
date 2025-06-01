@@ -708,7 +708,6 @@ void __ISR(_TIMER_3_VECTOR) Timer3IntHandler(void) {
 
         case inited:
         case halted:
-            ShutDownDrive_2();
             if (stepCount_2 < 0) {
                 stepCount_2 = 0;
             }

@@ -44,7 +44,7 @@
 //#define STEPPER_TEST
 //#define DC_MOTOR_TEST
 //#define RC_SERVO_TEST
-//#define MAIN
+#define MAIN
 
 #ifdef MAIN
 void main(void)
@@ -63,7 +63,8 @@ void main(void)
     HallSensor_Init();
     Ping_Init();
     TapeSensor_Init();
-
+    ES_Timer_Init();
+    
     // now initialize the Events and Services Framework and start it running
     ErrorType = ES_Initialize();
     if (ErrorType == Success) {

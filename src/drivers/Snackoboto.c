@@ -31,10 +31,16 @@ typedef enum {
 #define STEPPER_STEP_RATE 100
 #define STEPPER_RESOLUTION 1.8
 
+#define STEP_INTERVAL 1
+#define TIME_INTERVAL 200
+#define ANGLE_PER_STEP 1.8
+#define MAX_YAW 15
+
 // Defines for the Servo Motors (Part 1)
 #define SERVO_PIN RC_PORTV04
 #define SERVO_STEP_RATE 600
-#define SINGLE_FIRE_DUTY_CYCLE 200
+#define SINGLE_FIRE_DUTY_CYCLE 75
+#define SERVO_INIT_DUTY 1000
 
 // Defines for the DC Motors (Part 4)
 //#define ENABLE_PIN          RC_PORTY07
@@ -65,6 +71,7 @@ typedef enum {
 static Direction SnackoDirection;
 static double YawDisplacement;
 static double PitchDisplacement;
+static int ServoDuty;
 
  /**
  * @Function Snacko_Init(void)
@@ -99,6 +106,9 @@ int Snacko_Init(void){
     SnackoDirection = RIGHT;
     YawDisplacement = 0;
     PitchDisplacement = 0;
+    ServoDuty = SERVO_INIT_DUTY;
+    Stepper_InitSteps(FORWARD, 1, STEPPER_2);
+    Stepper_InitSteps(FORWARD, 1, STEPPER_1);
     return SUCCESS;
 }
 
@@ -108,9 +118,10 @@ int Snacko_Init(void){
  * @return SUCCESS or ERROR
  * @brief Rotates Snackoboto Left*/
 int Snacko_RotateLeft(unsigned int steps){
-    if (!Stepper_IsStepping(STEPPER_1)){
-        Stepper_InitSteps(REVERSE, steps, STEPPER_1);
+    if (!Stepper_IsStepping(STEPPER_2)){
+        Stepper_InitSteps(REVERSE, steps, STEPPER_2);
     }
+    YawDisplacement = YawDisplacement - (ANGLE_PER_STEP * steps);
     return SUCCESS;
 }
 
@@ -120,6 +131,20 @@ int Snacko_RotateLeft(unsigned int steps){
  * @return SUCCESS or ERROR
  * @brief Rotates Snackoboto Right*/
 int Snacko_RotateRight(unsigned int steps){
+    if (!Stepper_IsStepping(STEPPER_2)){
+        Stepper_InitSteps(FORWARD, steps, STEPPER_2);
+    }
+    //printf("%f adding %f\r\n", YawDisplacement, YawDisplacement + (ANGLE_PER_STEP * steps));
+    YawDisplacement = YawDisplacement + (ANGLE_PER_STEP * steps);
+    return SUCCESS;
+}
+
+/**
+ * @Function Snacko_PitchDown(unsigned in steps)
+ * @param None
+ * @return SUCCESS or ERROR
+ * @brief Pithces Snackoboto Down*/
+int Snacko_PitchDown(unsigned int steps){
     if (!Stepper_IsStepping(STEPPER_1)){
         Stepper_InitSteps(FORWARD, steps, STEPPER_1);
     }
@@ -131,9 +156,9 @@ int Snacko_RotateRight(unsigned int steps){
  * @param None
  * @return SUCCESS or ERROR
  * @brief Pithces Snackoboto Down*/
-int Snacko_PitchDown(unsigned int steps){
-    if (!Stepper_IsStepping(STEPPER_2)){
-        Stepper_InitSteps(FORWARD, steps, STEPPER_2);
+int Snacko_PitchUp(unsigned int steps){
+    if (!Stepper_IsStepping(STEPPER_1)){
+        Stepper_InitSteps(REVERSE, steps, STEPPER_1);
     }
     return SUCCESS;
 }
@@ -150,15 +175,15 @@ int Snacko_SetPitch(int angle){
     double angleNeeded = PitchDisplacement - roundAngle;
     int steps = angleNeeded / STEPPER_RESOLUTION;
     PitchDisplacement += angleNeeded;
-    printf("Snacko Setting Pitch : %f deg, %d steps\r\n", roundAngle, steps);
+    //printf("Snacko Setting Pitch : %f deg, %d steps\r\n", roundAngle, steps);
     if (steps > 0){
-        if (!Stepper_IsStepping(STEPPER_2)){
-            Stepper_InitSteps(REVERSE, steps, STEPPER_2);
+        if (!Stepper_IsStepping(STEPPER_1)){
+            Stepper_InitSteps(REVERSE, steps, STEPPER_1);
         }
     }
     else if (steps < 0){
-        if (!Stepper_IsStepping(STEPPER_2)){
-            Stepper_InitSteps(FORWARD, steps, STEPPER_2);
+        if (!Stepper_IsStepping(STEPPER_1)){
+            Stepper_InitSteps(FORWARD, steps, STEPPER_1);
         }
     }
     else {
@@ -196,10 +221,20 @@ int Snacko_SetFlywheelSpeed(unsigned int DutyCycle){
  * @return SUCCESS or ERROR
  * @brief Rotates Servo to Fire a Single Candy*/
 int Snacko_FireCandy(void){
-    static int prevDuty = 1000;
-    RC_SetPulseTime(SERVO_PIN, prevDuty + SINGLE_FIRE_DUTY_CYCLE);
-    prevDuty += SINGLE_FIRE_DUTY_CYCLE;
-    printf("Servo: %d\r\n", prevDuty);
+    RC_SetPulseTime(SERVO_PIN, ServoDuty + SINGLE_FIRE_DUTY_CYCLE);
+    ServoDuty += SINGLE_FIRE_DUTY_CYCLE;
+    printf("Servo: %d\r\n", ServoDuty);
+    return SUCCESS;
+}
+
+/**
+ * @Function Snacko_ResetServi(void)
+ * @param None
+ * @return SUCCESS or ERROR
+ * @brief Rotates Servo to Initial Position*/
+int Snacko_ResetServo(void){
+    RC_SetPulseTime(SERVO_PIN, SERVO_INIT_DUTY);
+    ServoDuty = SERVO_INIT_DUTY;
     return SUCCESS;
 }
 
@@ -236,6 +271,7 @@ void Snacko_SetYawDisplacement(double angle){
  * @return Direction
  * @brief Gets Status Variable of Yaw Displacement*/
 double Snacko_GetYawDisplacement(void){
+    printf("Returning %f\r\n", YawDisplacement);
     return YawDisplacement;
 }
 
@@ -257,7 +293,7 @@ double Snacko_GetPitchDisplacement(void){
     return PitchDisplacement;
 }
 
-#define SNACKO_TEST
+//#define SNACKO_TEST
 #ifdef SNACKO_TEST
 #define DELAY(x)    for (wait = 0; wait <= x; wait++) {asm("nop");}
 #define A_BIT       18300
@@ -281,7 +317,7 @@ double Snacko_GetPitchDisplacement(void){
      DELAY(MOTOR_TIME);
      Snacko_SetFlywheelSpeed(0);
      printf("Flywheel Off\r\n");
-     DELAY(MOTOR_TIME);/*
+     DELAY(MOTOR_TIME);
      //ROTATE TEST
      Snacko_RotateLeft(8);
      printf("Yaw Displacement: %d\r\n", Snacko_GetYawDisplacement());
@@ -295,7 +331,7 @@ double Snacko_GetPitchDisplacement(void){
      DELAY(MOTOR_TIME);
      Snacko_SetPitch(14.4);
      printf("Pitch Displacement: %d\r\n", Snacko_GetPitchDisplacement());
-     DELAY(MOTOR_TIME);*/
+     DELAY(MOTOR_TIME);
      //SERVO TEST
      for (int i = 0; i < 4; i++){
          printf("Single Candy Fired\r\n");
@@ -304,6 +340,51 @@ double Snacko_GetPitchDisplacement(void){
      }
                    
      printf("done\r\n");
-     while(1);
+     //while(1);
+     
+     while (1) {
+        if (!IsReceiveEmpty()) {
+            char input = GetChar();
+            switch (input) {
+                case 'w':
+                    Snacko_SetFlywheelSpeed(500);
+                    printf("Flywheel On\r\n");
+                    DELAY(MOTOR_TIME);
+                    break;
+                case 's':
+                    Snacko_SetFlywheelSpeed(0);
+                    printf("Flywheel Off\r\n");
+                    DELAY(MOTOR_TIME);
+                    break;
+                case 'a':
+                    Snacko_RotateLeft(8);
+                    printf("Rotating Left\r\n");
+                    DELAY(MOTOR_TIME);
+                    break;
+                case 'd':
+                    Snacko_RotateRight(8);
+                    printf("Rotating Right\r\n");
+                    DELAY(MOTOR_TIME);
+                    break;
+                case 'q':
+                    Snacko_PitchDown(5);
+                    printf("Pitching Down\r\n");
+                    break;
+                case 'e':
+                    Snacko_PitchUp(5);
+                    printf("Pitching Up\r\n");
+                    break;
+                case 'f':
+                    Snacko_FireCandy();
+                    printf("Firing Candy\r\n");
+                    break;
+                case 'r':
+                    Snacko_ResetServo();
+                    printf("Resetting Servo\r\n");
+                    break;
+            }
+        }
+    }
+
  }
 #endif

@@ -15,6 +15,7 @@
 #include "ObstacleSubHSM.h"
 #include "Snackoboto.h"
 #include "ES_Timers.h"
+#include <stdio.h>
 
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
@@ -33,8 +34,8 @@ static const char *StateNames[] = {
 
 #define FLYWHEEL_SPEED 300
 #define FIRE_DELAY 1000
-#define STEP_INTERVAL 1
-#define TIME_INTERVAL 200
+#define STEP_INTERVAL 4
+#define TIME_INTERVAL 1000
 #define ANGLE_PER_STEP 1
 #define CENTERING_STEPS 5
 #define OBSTACLE_PITCH 0
@@ -134,11 +135,9 @@ ES_Event RunObstacleSubHSM(ES_Event ThisEvent)
             StepCount++;
             if (Snacko_GetDirection() == RIGHT){
                 Snacko_RotateLeft(STEP_INTERVAL);
-                Snacko_SetYawDisplacement(Snacko_GetYawDisplacement() - ANGLE_PER_STEP * STEP_INTERVAL);
             }
             else{
                 Snacko_RotateRight(STEP_INTERVAL);
-                Snacko_SetYawDisplacement(Snacko_GetYawDisplacement() + ANGLE_PER_STEP * STEP_INTERVAL);
             }
             if (StepCount >= 5){
             nextState = Obstacle_Fire;

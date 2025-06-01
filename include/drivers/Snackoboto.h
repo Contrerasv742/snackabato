@@ -48,6 +48,13 @@ int Snacko_RotateRight(unsigned int steps);
 int Snacko_PitchDown(unsigned int steps);
 
 /**
+ * @Function Snacko_PitchDown(unsigned in steps)
+ * @param None
+ * @return SUCCESS or ERROR
+ * @brief Pithces Snackoboto Down*/
+int Snacko_PitchUp(unsigned int steps);
+
+/**
  * @Function Snacko_SetPitch(int angle)
  * APPROXIMATE_ANGLE = ANGLE - (ANGLE % RESOLUTION)
  * @param None
@@ -68,6 +75,13 @@ int Snacko_SetFlywheelSpeed(unsigned int speed);
  * @return SUCCESS or ERROR
  * @brief Rotates Servo to Fire a Single Candy*/
 int Snacko_FireCandy(void);
+
+/**
+ * @Function Snacko_ResetServi(void)
+ * @param None
+ * @return SUCCESS or ERROR
+ * @brief Rotates Servo to Initial Position*/
+int Snacko_ResetServo(void);
 
 /**
  * @Function Snacko_SetDirection(Direction d)
@@ -95,7 +109,7 @@ void Snacko_SetYawDisplacement(int angle);
  * @param None
  * @return Direction
  * @brief Gets Status Variable of Yaw Displacement*/
-int Snacko_GetYawDisplacement(void);
+double Snacko_GetYawDisplacement(void);
 
 /**
  * @Function Snacko_SetPitchDispalcement(int angle)

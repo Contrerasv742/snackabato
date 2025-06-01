@@ -29,7 +29,13 @@
  /*******************************************************************************
   * MODULE #DEFINES                                                             *
   ******************************************************************************/
- 
+#define DELAY(x)    for (unsigned int wait = 0; wait <= x; wait++) {asm("nop");}
+#define A_BIT       18300
+#define A_BIT_MORE  36600
+#define YET_A_BIT_LONGER (A_BIT_MORE<<2)
+#define A_LOT       183000
+#define NUM_TIMES_REPEAT_LED 5
+#define MOTOR_TIME (A_LOT<<2)
  
  typedef enum {
      InitPState,
@@ -49,8 +55,8 @@
      "Obstacle",
  };
 
- #define STEP_INTERVAL 1
- #define TIME_INTERVAL 200
+ #define STEP_INTERVAL 4
+ #define TIME_INTERVAL 1000
  #define STARTING_PITCH 0
  
  
@@ -145,6 +151,7 @@
              nextState = Calibration;
              makeTransition = TRUE;
              ThisEvent.EventType = ES_NO_EVENT;
+             DELAY(MOTOR_TIME);
          }
          break;
      
@@ -153,15 +160,20 @@
          if (ThisEvent.EventType == ES_ENTRY){
              ES_Timer_Init();
              ES_Timer_InitTimer(6, TIME_INTERVAL);
+             ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 6){
             Snacko_PitchDown(STEP_INTERVAL);
+            DELAY(MOTOR_TIME);
+            //printf("New Pitch: %f\r\n",Snacko_GetPitchDisplacement());
             ES_Timer_Init();
             ES_Timer_InitTimer(6, TIME_INTERVAL);
+            ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == TAPE_DETECTED){
              //Pitch Up + Reset Pitch?
              Snacko_SetPitchDisplacement(STARTING_PITCH);
+             InitSearchingSubHSM();
              nextState = Searching;
              makeTransition = TRUE;
              ThisEvent.EventType = ES_NO_EVENT;
@@ -179,15 +191,18 @@
      case Searching:
          ThisEvent = RunSearchingSubHSM(ThisEvent);
          if (ThisEvent.EventType == ES_ENTRY){
-             
+             //printf("Searching\r\n");
+             ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == PEAK_R_DETECTED){
+             //printf("R Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
              InitTargetRSubHSM();
              nextState = TargetR;
              makeTransition = TRUE;
              ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == PEAK_L_DETECTED){
+             //printf("L Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
              InitTargetLSubHSM();
              nextState = TargetL;
              makeTransition = TRUE;
