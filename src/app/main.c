@@ -44,8 +44,14 @@
 //#define STEPPER_TEST
 //#define DC_MOTOR_TEST
 //#define RC_SERVO_TEST
-#define MAIN
-
+//#define MAIN
+#define DELAY(x)    for (unsigned int wait = 0; wait <= x; wait++) {asm("nop");}
+#define A_BIT       18300
+#define A_BIT_MORE  36600
+#define YET_A_BIT_LONGER (A_BIT_MORE<<2)
+#define A_LOT       183000
+#define NUM_TIMES_REPEAT_LED 5
+#define MOTOR_TIME (A_LOT<<2)
 #ifdef MAIN
 void main(void)
 {
@@ -63,8 +69,10 @@ void main(void)
     HallSensor_Init();
     Ping_Init();
     TapeSensor_Init();
-    ES_Timer_Init();
-    
+    DELAY(A_LOT);
+    DELAY(A_LOT);
+    DELAY(A_LOT);
+    DELAY(A_LOT);
     // now initialize the Events and Services Framework and start it running
     ErrorType = ES_Initialize();
     if (ErrorType == Success) {
@@ -185,5 +193,31 @@ int main(void) {
         RC_GetPulseTime(RC_PORTV04);
     }
     return 0;
+}
+#endif
+
+//#define IR_TEST
+#ifdef IR_TEST
+#define DELAY(x)    for (unsigned int wait = 0; wait <= x; wait++) {asm("nop");}
+#define A_BIT       18300
+#define A_BIT_MORE  36600
+#define YET_A_BIT_LONGER (A_BIT_MORE<<2)
+#define A_LOT       183000
+#define NUM_TIMES_REPEAT_LED 5
+#define MOTOR_TIME (A_LOT<<2)
+void main(void)
+{
+    ES_Return_t ErrorType;
+    unsigned int reading, reading2, tape;
+    BOARD_Init();
+    IR_Init();
+    TapeSensor_Init();
+    while(1){
+        reading = IR_GetReadingR();
+        reading2 = IR_GetReadingL();
+        tape = TapeSensor_GetReading();
+        printf("IR_READING_R: %d, IR_READING_L: %d, TAPE_READING: %d\r\n", reading, reading2, tape);
+        DELAY(A_BIT_MORE);
+    }
 }
 #endif

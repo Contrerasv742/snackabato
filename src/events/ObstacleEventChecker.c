@@ -91,9 +91,9 @@
             #ifdef EVENTCHECKER_TEST           // keep this as is for test harness
                 SaveEvent(thisEvent);
             #else
-                PostSnackoHSM(thisEvent); // Change it to your target service's post function
+                //PostSnackoHSM(thisEvent); // Change it to your target service's post function
             #endif  
-            returnVal = TRUE;
+            returnVal = FALSE;
         }
     }
     else{
@@ -139,7 +139,10 @@
      printf("\r\nEvent checking test harness for %s", __FILE__);
  
      while (1) {
-         CheckObstacle();
+         unsigned short distance = Ping_GetDistance();
+        
+        printf("%d\r\n", distance);
+         //CheckObstacle();
      }
          /*
          if (IsTransmitEmpty()) {

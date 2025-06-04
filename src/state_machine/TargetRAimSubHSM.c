@@ -35,7 +35,7 @@ static const char *StateNames[] = {
     "Angle",
 };
 
-#define STEP_INTERVAL 4
+#define STEP_INTERVAL 16
 #define TIME_INTERVAL 1000
 #define ANGLE_PER_STEP 1
 #define AVERAGE_CONST 5
@@ -57,7 +57,7 @@ static const char *StateNames[] = {
 
 static TargetRAimSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
 static uint8_t MyPriority;
-static uint8_t StepCount;
+static int StepCount;
 static unsigned short total;
 static uint8_t count;
 
@@ -130,12 +130,17 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
             StepCount = 0;
             ES_Timer_Init();
             ES_Timer_InitTimer(2, TIME_INTERVAL);
+            ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 2){
             StepCount++;
             Snacko_RotateRight(STEP_INTERVAL);
             ES_Timer_Init();
             ES_Timer_InitTimer(2, TIME_INTERVAL);
+            ThisEvent.EventType = ES_NO_EVENT;
+            if (StepCount > 4){
+                ThisEvent.EventType = TARGET_LOST;
+            }
         }
         if (ThisEvent.EventType == PEAK_L_DETECTED){
             printf("Second Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
@@ -150,6 +155,7 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
             StepCount = StepCount / 2;
             ES_Timer_Init();
             ES_Timer_InitTimer(2, TIME_INTERVAL);
+            ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 2){
             StepCount--;
@@ -164,6 +170,7 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
                 ES_Timer_Init();
                 ES_Timer_InitTimer(2, TIME_INTERVAL);
             }
+            ThisEvent.EventType = ES_NO_EVENT;
         }
         break;
 
@@ -173,14 +180,16 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
             count = 0;
             ES_Timer_Init();
             ES_Timer_InitTimer(2, TIME_INTERVAL);
+            ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 2){
             count++;
             total += Ping_GetDistance();
             if (count >= AVERAGE_CONST){
-                unsigned short averageDist = total / count;
-                printf("Aiming at %f\r\n", averageDist * PITCH_CONST);
-                Snacko_SetPitch(averageDist * PITCH_CONST);
+                //unsigned short averageDist = total / count;
+                //printf("Aiming at %f\r\n", averageDist * PITCH_CONST);
+                //Snacko_SetPitch(averageDist * PITCH_CONST);
+                Snacko_PitchUp(4);
                 total = 0;
                 count = 0;
                 ThisEvent.EventType = AIMED;
@@ -188,6 +197,7 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
             else{
                 ES_Timer_Init();
                 ES_Timer_InitTimer(2, TIME_INTERVAL);
+                ThisEvent.EventType = ES_NO_EVENT;
             }
         }
         break;

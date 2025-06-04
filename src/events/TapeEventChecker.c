@@ -73,6 +73,7 @@
      ES_EventTyp_t curEvent;
      ES_Event thisEvent;
      uint8_t returnVal = FALSE;
+     thisEvent.EventType = ES_NO_EVENT;
      unsigned int sensorReading = TapeSensor_GetReading();
      //printf("%d\r\n", sensorReading);
      //thisEvent.EventParam = sensorReading;
@@ -84,19 +85,19 @@
      }
      if (curEvent != lastEvent) { // check for change from last time
          if (curEvent == TAPE_DETECTED){
-             //printf("Tape Detected Event\r\n");
+             printf("Tape Detected Event\r\n");
          }
          else if (curEvent == TAPE_LOST){
-             //printf("Tape Lost Event\r\n");
+             printf("Tape Lost Event\r\n");
          }
          thisEvent.EventType = curEvent;
          returnVal = TRUE;
          lastEvent = curEvent; // update history
- #ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-         PostSnackoHSM(thisEvent); // Change it to your target service's post function
- #else
-         SaveEvent(thisEvent);
- #endif   
+        #ifndef EVENTCHECKER_TEST           // keep this as is for test harness
+                PostSnackoHSM(thisEvent); // Change it to your target service's post function
+        #else
+                SaveEvent(thisEvent);
+        #endif   
      }
      return (returnVal);
  }

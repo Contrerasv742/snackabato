@@ -52,6 +52,7 @@
      AIMED,
      OBSTACLE_DETECTED,
      CANDY_FIRED,
+     TARGET_LOST,
      /* User-defined events end here */
      NUMBEROFEVENTS,
  } ES_EventTyp_t;
@@ -75,6 +76,7 @@
      "AIMED",
      "OBSTACLE_DETECTED",
      "CANDY_FIRED",
+     "TARGET_LOST"
      "NUMBEROFEVENTS",
  };
  

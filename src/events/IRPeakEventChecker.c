@@ -34,12 +34,13 @@
  #include <AD.h>
 #include <IO_Ports.h>
 #include <SnackobotoHSM.h>
+#include <stdio.h>
 
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
-#define IR_THRESHOLD 1000
-#define DEBOUNCE_THRESHOLD 5
+#define IR_THRESHOLD 2
+#define DEBOUNCE_THRESHOLD 2
 
 /*******************************************************************************
  * EVENTCHECKER_TEST SPECIFIC CODE                                                             *
@@ -87,66 +88,62 @@ static ES_Event storedEvent;
  * @author Gabriel H Elkaim, 2013.09.27 09:18
  * @modified Gabriel H Elkaim/Max Dunne, 2016.09.12 20:08 */
 uint8_t CheckIRPeak(void) {
-//#define IR_DETECTORS
+#define IR_DETECTORS
 #ifdef IR_DETECTORS
-    static unsigned int previousReadingR = 0;       // debounced state
-    static unsigned int previousReadingL = 0;
+    //static unsigned int previousReadingR = 0;       // debounced state
+    //static unsigned int previousReadingL = 0;
     static uint8_t debounceCounterR = 0;   // debounce counters per bumper
     static uint8_t debounceCounterL = 0;
+    static uint8_t peakedR = FALSE;
+    static uint8_t peakedL = FALSE;
     unsigned int rawReadingR = IR_GetReadingR();
     unsigned int rawReadingL = IR_GetReadingL();
     uint8_t returnVal = FALSE;
-
+    //printf("IR_READING_R: %d, IR_READING_L: %d\r\n", rawReadingR, rawReadingL);
     if (rawReadingR < IR_THRESHOLD){
-        if (rawReadingR > previousReadingR){
-            debounceCounterR++;
-            if (debounceCounterR > DEBOUNCE_THRESHOLD){
-                debounceCounterR = 0;
-                ES_Event thisEvent;
-                thisEvent.EventType = PEAK_R_DETECTED;
-                #ifdef EVENTCHECKER_TEST           // keep this as is for test harness
-                    SaveEvent(thisEvent);
-                #else
-                    PostSnackoHSM(thisEvent); // Change it to your target service's post function
-                #endif  
-                returnVal = TRUE;
-            }
-        }
-        else{
+        debounceCounterR++;
+        if (debounceCounterR > DEBOUNCE_THRESHOLD && !peakedR){
+            printf("Peak R Detected\r\n");
+            peakedR = TRUE;
             debounceCounterR = 0;
+            ES_Event thisEvent;
+            thisEvent.EventType = PEAK_R_DETECTED;
+            #ifdef EVENTCHECKER_TEST           // keep this as is for test harness
+                SaveEvent(thisEvent);
+            #else
+                PostSnackoHSM(thisEvent); // Change it to your target service's post function
+            #endif  
+            returnVal = TRUE;
         }
-        previousReadingR = rawReadingR;
     }
     else{
+        peakedR = FALSE;
         debounceCounterR = 0;
     }
     if (rawReadingL < IR_THRESHOLD){
-        if (rawReadingL > previousReadingL){
-            debounceCounterL++;
-            if (debounceCounterL > DEBOUNCE_THRESHOLD){
-                debounceCounterL = 0;
-                ES_Event thisEvent;
-                thisEvent.EventType = PEAK_L_DETECTED;
-                #ifdef EVENTCHECKER_TEST           // keep this as is for test harness
-                    SaveEvent(thisEvent);
-                #else
-                    PostSnackoHSM(thisEvent); // Change it to your target service's post function
-                #endif  
-                returnVal = TRUE;
-            }
-        }
-        else{
+        debounceCounterL++;
+        if (debounceCounterL > DEBOUNCE_THRESHOLD && !peakedL){
+            printf("Peak L Detected\r\n");
+            peakedL = TRUE;
             debounceCounterL = 0;
+            ES_Event thisEvent;
+            thisEvent.EventType = PEAK_L_DETECTED;
+            #ifdef EVENTCHECKER_TEST           // keep this as is for test harness
+                SaveEvent(thisEvent);
+            #else
+                PostSnackoHSM(thisEvent); // Change it to your target service's post function
+            #endif  
+            returnVal = TRUE;
         }
-        previousReadingL = rawReadingL;
     }
     else{
+        peakedL = FALSE;
         debounceCounterL = 0;
     }
     return (returnVal);
 #endif
     
-#define SWITCH_DETECTORS
+//#define SWITCH_DETECTORS
 #ifdef SWITCH_DETECTORS
 #define SWITCH_R_TRIS PORTY07_TRIS
 #define SWITCH_L_TRIS PORTY05_TRIS
@@ -238,7 +235,7 @@ void PrintEvent(void);
 void main(void) {
     BOARD_Init();
     /* user initialization code goes here */
-    
+    IR_Init();
     // Do not alter anything below this line
     int i;
 

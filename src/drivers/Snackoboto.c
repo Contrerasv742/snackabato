@@ -13,6 +13,10 @@
 #include <pwm.h>
 #include <RC_Servo.h>
 #include <BOARD.h>
+#include "TapeSensor.h"
+#include "IR_Sensor.h"
+#include "ping.h"
+#include "EventChecker.h"
 
 /*******************************************************************************
  * PUBLIC #DEFINES                                                            *
@@ -37,9 +41,9 @@ typedef enum {
 #define MAX_YAW 15
 
 // Defines for the Servo Motors (Part 1)
-#define SERVO_PIN RC_PORTV04
+#define SERVO_PIN RC_PORTV03
 #define SERVO_STEP_RATE 600
-#define SINGLE_FIRE_DUTY_CYCLE 75
+#define SINGLE_FIRE_DUTY_CYCLE 150
 #define SERVO_INIT_DUTY 1000
 
 // Defines for the DC Motors (Part 4)
@@ -71,7 +75,7 @@ typedef enum {
 static Direction SnackoDirection;
 static double YawDisplacement;
 static double PitchDisplacement;
-static int ServoDuty;
+static unsigned short int ServoDuty;
 
  /**
  * @Function Snacko_Init(void)
@@ -107,8 +111,10 @@ int Snacko_Init(void){
     YawDisplacement = 0;
     PitchDisplacement = 0;
     ServoDuty = SERVO_INIT_DUTY;
-    Stepper_InitSteps(FORWARD, 1, STEPPER_2);
-    Stepper_InitSteps(FORWARD, 1, STEPPER_1);
+    RC_SetPulseTime(SERVO_PIN, SERVO_INIT_DUTY);
+    ServoDuty = SERVO_INIT_DUTY;
+//    Stepper_InitSteps(FORWARD, 1, STEPPER_2);
+//    Stepper_InitSteps(FORWARD, 1, STEPPER_1);
     return SUCCESS;
 }
 
@@ -119,7 +125,7 @@ int Snacko_Init(void){
  * @brief Rotates Snackoboto Left*/
 int Snacko_RotateLeft(unsigned int steps){
     if (!Stepper_IsStepping(STEPPER_2)){
-        Stepper_InitSteps(REVERSE, steps, STEPPER_2);
+        Stepper_InitSteps(FORWARD, steps, STEPPER_2);
     }
     YawDisplacement = YawDisplacement - (ANGLE_PER_STEP * steps);
     return SUCCESS;
@@ -132,7 +138,7 @@ int Snacko_RotateLeft(unsigned int steps){
  * @brief Rotates Snackoboto Right*/
 int Snacko_RotateRight(unsigned int steps){
     if (!Stepper_IsStepping(STEPPER_2)){
-        Stepper_InitSteps(FORWARD, steps, STEPPER_2);
+        Stepper_InitSteps(REVERSE, steps, STEPPER_2);
     }
     //printf("%f adding %f\r\n", YawDisplacement, YawDisplacement + (ANGLE_PER_STEP * steps));
     YawDisplacement = YawDisplacement + (ANGLE_PER_STEP * steps);
@@ -156,7 +162,7 @@ int Snacko_PitchDown(unsigned int steps){
  * @param None
  * @return SUCCESS or ERROR
  * @brief Pithces Snackoboto Down*/
-int Snacko_PitchUp(unsigned int steps){
+int Snacko_PitchUp(int32_t steps){
     if (!Stepper_IsStepping(STEPPER_1)){
         Stepper_InitSteps(REVERSE, steps, STEPPER_1);
     }
@@ -233,8 +239,13 @@ int Snacko_FireCandy(void){
  * @return SUCCESS or ERROR
  * @brief Rotates Servo to Initial Position*/
 int Snacko_ResetServo(void){
+    
     RC_SetPulseTime(SERVO_PIN, SERVO_INIT_DUTY);
     ServoDuty = SERVO_INIT_DUTY;
+    /*
+    RC_SetPulseTime(SERVO_PIN, ServoDuty - SINGLE_FIRE_DUTY_CYCLE);
+    ServoDuty -= SINGLE_FIRE_DUTY_CYCLE;*/
+    //printf("Servo: %d\r\n", ServoDuty);
     return SUCCESS;
 }
 
@@ -271,7 +282,7 @@ void Snacko_SetYawDisplacement(double angle){
  * @return Direction
  * @brief Gets Status Variable of Yaw Displacement*/
 double Snacko_GetYawDisplacement(void){
-    printf("Returning %f\r\n", YawDisplacement);
+    //printf("Returning %f\r\n", YawDisplacement);
     return YawDisplacement;
 }
 
@@ -293,7 +304,7 @@ double Snacko_GetPitchDisplacement(void){
     return PitchDisplacement;
 }
 
-//#define SNACKO_TEST
+#define SNACKO_TEST
 #ifdef SNACKO_TEST
 #define DELAY(x)    for (wait = 0; wait <= x; wait++) {asm("nop");}
 #define A_BIT       18300
@@ -310,7 +321,10 @@ double Snacko_GetPitchDisplacement(void){
      BOARD_Init();
      /* user initialization code goes here */
      Snacko_Init();
-     
+     IR_Init();
+     Ping_Init();
+     TapeSensor_Init();
+     /*
      //FLYWHEEL TEST
      Snacko_SetFlywheelSpeed(500);
      printf("Flywheel On\r\n");
@@ -340,31 +354,44 @@ double Snacko_GetPitchDisplacement(void){
      }
                    
      printf("done\r\n");
+      * */
      //while(1);
-     
+     printf("Starting Snackoboto Test (Keyboard Input)\r\n");
+     printf("*************************KEYBOARD INPUTS*************************\r\n"
+             "w: Flywheel On\t\ts: Flywheel Off\t\ta: Rotate Left\r\n"
+                            "d: Rotate Right\t\tq: Pitch Up\t\te: Pitch Down\r\n"
+                            "f: Fire Candy\t\tr: Reset Servo\t\tp: Ping Reading\r\n"
+                            "i: Left IR\t\to: Right IR\t\tt: Tape Sensor\r\n"
+                            "m: Keyboard Input Menu\r\n"
+             "*******************************************************************\r\n");
+     unsigned int ping;
      while (1) {
+         CheckObstacle();
+         CheckIRPeak();
+         CheckTapeReading();
+        int reading;
         if (!IsReceiveEmpty()) {
             char input = GetChar();
             switch (input) {
                 case 'w':
-                    Snacko_SetFlywheelSpeed(500);
+                    Snacko_SetFlywheelSpeed(1000);
                     printf("Flywheel On\r\n");
-                    DELAY(MOTOR_TIME);
+                    //DELAY(MOTOR_TIME);
                     break;
                 case 's':
                     Snacko_SetFlywheelSpeed(0);
                     printf("Flywheel Off\r\n");
-                    DELAY(MOTOR_TIME);
+                    //DELAY(MOTOR_TIME);
                     break;
                 case 'a':
                     Snacko_RotateLeft(8);
                     printf("Rotating Left\r\n");
-                    DELAY(MOTOR_TIME);
+                    //DELAY(MOTOR_TIME);
                     break;
                 case 'd':
                     Snacko_RotateRight(8);
                     printf("Rotating Right\r\n");
-                    DELAY(MOTOR_TIME);
+                    //DELAY(MOTOR_TIME);
                     break;
                 case 'q':
                     Snacko_PitchDown(5);
@@ -381,6 +408,31 @@ double Snacko_GetPitchDisplacement(void){
                 case 'r':
                     Snacko_ResetServo();
                     printf("Resetting Servo\r\n");
+                    break;
+                case 'p':
+                    ping = Ping_GetDistance();
+                    printf("Ping Reading: %d\r\n", ping);
+                    break;
+                case 'i':
+                    reading = IR_GetReadingL();
+                    printf("Left IR Reading: %d\r\n", reading);
+                    break;
+                case 'o':
+                    reading = IR_GetReadingR();
+                    printf("Right IR Reading: %d\r\n", reading);
+                    break;
+                case 't':
+                    reading = TapeSensor_GetReading();
+                    printf("Tape Sensor Reading: %d\r\n", reading);
+                    break;
+                case 'm':
+                    printf("*************************KEYBOARD INPUTS*************************\r\n"
+                            "w: Flywheel On\t\ts: Flywheel Off\t\ta: Rotate Left\r\n"
+                            "d: Rotate Right\t\tq: Pitch Up\t\te: Pitch Down\r\n"
+                            "f: Fire Candy\t\tr: Reset Servo\t\tp: Ping Reading\r\n"
+                            "i: Left IR\t\to: Right IR\t\tt: Tape Sensor\r\n"
+                            "m: Keyboard Input Menu\r\n"
+                            "*****************************************************************\r\n");
                     break;
             }
         }

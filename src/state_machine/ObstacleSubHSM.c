@@ -130,6 +130,7 @@ ES_Event RunObstacleSubHSM(ES_Event ThisEvent)
             Snacko_SetPitch(OBSTACLE_PITCH);
             ES_Timer_Init();
             ES_Timer_InitTimer(5, TIME_INTERVAL);
+            ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 5){
             StepCount++;
@@ -140,14 +141,15 @@ ES_Event RunObstacleSubHSM(ES_Event ThisEvent)
                 Snacko_RotateRight(STEP_INTERVAL);
             }
             if (StepCount >= 5){
-            nextState = Obstacle_Fire;
-            makeTransition = TRUE;
-            ThisEvent.EventType = ES_NO_EVENT;
+                nextState = Obstacle_Fire;
+                makeTransition = TRUE;
+                ThisEvent.EventType = ES_NO_EVENT;
             }
             else{
                 ES_Timer_Init();
                 ES_Timer_InitTimer(5, TIME_INTERVAL);
             }
+            ThisEvent.EventType = ES_NO_EVENT;
         }
         break;
 
@@ -157,12 +159,14 @@ ES_Event RunObstacleSubHSM(ES_Event ThisEvent)
             Snacko_SetFlywheelSpeed(FLYWHEEL_SPEED);
             ES_Timer_Init();
             ES_Timer_InitTimer(5, FIRE_DELAY);
+            ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 5){
             if (fired == FALSE){
                 Snacko_FireCandy();
                 fired = TRUE;
                 ES_Timer_InitTimer(5, FIRE_DELAY);
+                ThisEvent.EventType = ES_NO_EVENT;
             }
             else if (fired == TRUE){
                 Snacko_SetFlywheelSpeed(0);

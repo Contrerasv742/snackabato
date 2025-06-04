@@ -28,6 +28,8 @@
 int TapeSensor_Init(void){
     AD_Init();
     AD_AddPins(TAPE_SENSOR_PIN);
+    
+    return 0;
 }
 
 /**

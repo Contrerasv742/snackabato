@@ -148,10 +148,10 @@
              // initial state
  
              // now put the machine into the actual initial state
-             nextState = Calibration;
+             InitSearchingSubHSM();
+             nextState = Searching;
              makeTransition = TRUE;
              ThisEvent.EventType = ES_NO_EVENT;
-             DELAY(MOTOR_TIME);
          }
          break;
      
@@ -164,7 +164,7 @@
          }
          if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 6){
             Snacko_PitchDown(STEP_INTERVAL);
-            DELAY(MOTOR_TIME);
+            //DELAY(MOTOR_TIME);
             //printf("New Pitch: %f\r\n",Snacko_GetPitchDisplacement());
             ES_Timer_Init();
             ES_Timer_InitTimer(6, TIME_INTERVAL);
@@ -195,14 +195,14 @@
              ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == PEAK_R_DETECTED){
-             //printf("R Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
+             printf("R Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
              InitTargetRSubHSM();
              nextState = TargetR;
              makeTransition = TRUE;
              ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == PEAK_L_DETECTED){
-             //printf("L Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
+             printf("L Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
              InitTargetLSubHSM();
              nextState = TargetL;
              makeTransition = TRUE;
@@ -219,10 +219,9 @@
      case TargetR:
          ThisEvent = RunTargetRSubHSM(ThisEvent);
          if (ThisEvent.EventType == ES_ENTRY){
-
              ThisEvent.EventType = ES_NO_EVENT;
          }
-         if (ThisEvent.EventType == CANDY_FIRED){
+         if (ThisEvent.EventType == CANDY_FIRED || ThisEvent.EventType == TARGET_LOST){
              //InitSearchingSubHSM();
              nextState = Searching;
              makeTransition = TRUE;
@@ -233,7 +232,6 @@
      case TargetL:
          ThisEvent = RunTargetLSubHSM(ThisEvent);
          if (ThisEvent.EventType == ES_ENTRY){
-
              ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == CANDY_FIRED){
@@ -247,7 +245,6 @@
      case Obstacle:
          ThisEvent = RunObstacleSubHSM(ThisEvent);
          if (ThisEvent.EventType == ES_ENTRY){
-
              ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == CANDY_FIRED){

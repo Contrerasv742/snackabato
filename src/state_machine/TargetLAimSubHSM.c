@@ -58,7 +58,7 @@ static const char *StateNames[] = {
 
 static TargetLAimSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
 static uint8_t MyPriority;
-static uint8_t StepCount;
+static int StepCount;
 static unsigned short total;
 static uint8_t count;
 
@@ -131,12 +131,17 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
             StepCount = 0;
             ES_Timer_Init();
             ES_Timer_InitTimer(4, TIME_INTERVAL);
+            ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 4){
             StepCount++;
             Snacko_RotateLeft(STEP_INTERVAL);
             ES_Timer_Init();
             ES_Timer_InitTimer(4, TIME_INTERVAL);
+            ThisEvent.EventType = ES_NO_EVENT;
+            if (StepCount > 4){
+                ThisEvent.EventType = TARGET_LOST;
+            }
         }
         if (ThisEvent.EventType == PEAK_R_DETECTED){
             printf("Second Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
@@ -151,6 +156,7 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
             StepCount = StepCount / 2;
             ES_Timer_Init();
             ES_Timer_InitTimer(4, TIME_INTERVAL);
+            ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 4){
             StepCount--;
@@ -165,6 +171,7 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
                 ES_Timer_Init();
                 ES_Timer_InitTimer(4, TIME_INTERVAL);
             }
+            ThisEvent.EventType = ES_NO_EVENT;
         }
         break;
 
@@ -174,6 +181,7 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
             count = 0;
             ES_Timer_Init();
             ES_Timer_InitTimer(4, TIME_INTERVAL);
+            ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 4){
             count++;
@@ -189,6 +197,7 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
             else{
                 ES_Timer_Init();
                 ES_Timer_InitTimer(4, TIME_INTERVAL);
+                ThisEvent.EventType = ES_NO_EVENT;
             }
         }
         break;

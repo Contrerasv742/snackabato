@@ -32,10 +32,10 @@ static const char *StateNames[] = {
     "Sweep_Left",
 };
 
-#define STEP_INTERVAL 4
-#define TIME_INTERVAL 1000
+#define STEP_INTERVAL 16
+#define TIME_INTERVAL 500
 #define ANGLE_PER_STEP 1.8
-#define MAX_YAW 15
+#define MAX_YAW 120
 
 
 /*******************************************************************************
@@ -123,16 +123,16 @@ ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
         if (ThisEvent.EventType == ES_ENTRY){
             //printf("SWEEP_RIGHT_ENTRY\r\n");
             //Snacko_SetDirection(RIGHT);
-            ES_Timer_Init();
+            //ES_Timer_Init();
             ES_Timer_InitTimer(0, TIME_INTERVAL);
             ThisEvent.EventType = ES_NO_EVENT;
         }
-        if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 0){
-            double yawDisplace = Snacko_GetYawDisplacement();
-            printf("Rotating Right, Currently at %f\r\n", yawDisplace);
+        else if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 0){
+            //double yawDisplace = Snacko_GetYawDisplacement();
+            //printf("Rotating Right, Currently at %f\r\n", yawDisplace);
             Snacko_RotateRight(STEP_INTERVAL);
             if (Snacko_GetYawDisplacement() >= MAX_YAW){
-                printf("%f is greater than 1.8\r\n", yawDisplace);
+                //printf("%f is greater than 1.8\r\n", yawDisplace);
                 nextState = Sweep_Left;
                 makeTransition = TRUE;
             }
@@ -142,11 +142,14 @@ ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
             }
             ThisEvent.EventType = ES_NO_EVENT;
         }
+        else{
+            ThisEvent.EventType = ES_NO_EVENT;
+        }
         break;
 
     case Sweep_Left:
         if (ThisEvent.EventType == ES_ENTRY){
-            Snacko_SetDirection(LEFT);
+            //Snacko_SetDirection(LEFT);
             ES_Timer_Init();
             ES_Timer_InitTimer(0, TIME_INTERVAL);
             ThisEvent.EventType = ES_NO_EVENT;

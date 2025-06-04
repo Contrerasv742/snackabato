@@ -32,8 +32,8 @@ static const char *StateNames[] = {
     "Target_Fire",
 };
 
-#define FLYWHEEL_SPEED 300
-#define FIRE_DELAY 1000
+#define FLYWHEEL_SPEED 500
+#define FIRE_DELAY 2000
 
 
 
@@ -121,12 +121,15 @@ ES_Event RunTargetLSubHSM(ES_Event ThisEvent)
     case Target_Aim: // in the first state, replace this with correct names
         ThisEvent = RunTargetLAimSubHSM(ThisEvent);
         if (ThisEvent.EventType == ES_ENTRY){
-            
+            ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == AIMED){
             nextState = Target_Fire;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
+        }
+        if (ThisEvent.EventType == TARGET_LOST){
+            ThisEvent.EventType = TARGET_LOST;
         }
         break;
 
@@ -135,12 +138,14 @@ ES_Event RunTargetLSubHSM(ES_Event ThisEvent)
             Snacko_SetFlywheelSpeed(FLYWHEEL_SPEED);
             ES_Timer_Init();
             ES_Timer_InitTimer(3, FIRE_DELAY);
+            ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 3){
             if (fired == FALSE){
                 Snacko_FireCandy();
                 fired = TRUE;
                 ES_Timer_InitTimer(3, FIRE_DELAY);
+                ThisEvent.EventType = ES_NO_EVENT;
             }
             else if (fired == TRUE){
                 Snacko_SetFlywheelSpeed(0);
