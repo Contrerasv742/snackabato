@@ -44,7 +44,7 @@
 //#define STEPPER_TEST
 //#define DC_MOTOR_TEST
 //#define RC_SERVO_TEST
-//#define MAIN
+#define MAIN
 #define DELAY(x)    for (unsigned int wait = 0; wait <= x; wait++) {asm("nop");}
 #define A_BIT       18300
 #define A_BIT_MORE  36600

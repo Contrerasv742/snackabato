@@ -129,14 +129,14 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
     case NextPeak:
         if (ThisEvent.EventType == ES_ENTRY){
             StepCount = 0;
-            ES_Timer_Init();
+            //ES_Timer_Init();
             ES_Timer_InitTimer(4, TIME_INTERVAL);
             ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 4){
             StepCount++;
             Snacko_RotateLeft(STEP_INTERVAL);
-            ES_Timer_Init();
+            //ES_Timer_Init();
             ES_Timer_InitTimer(4, TIME_INTERVAL);
             ThisEvent.EventType = ES_NO_EVENT;
             if (StepCount > 4){
@@ -144,7 +144,7 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
             }
         }
         if (ThisEvent.EventType == PEAK_R_DETECTED){
-            printf("Second Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
+            //printf("Second Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
             nextState = Centering;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
@@ -154,7 +154,7 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
     case Centering:
         if (ThisEvent.EventType == ES_ENTRY){
             StepCount = StepCount / 2;
-            ES_Timer_Init();
+            //ES_Timer_Init();
             ES_Timer_InitTimer(4, TIME_INTERVAL);
             ThisEvent.EventType = ES_NO_EVENT;
         }
@@ -162,13 +162,13 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
             StepCount--;
             Snacko_RotateRight(STEP_INTERVAL);
             if (StepCount <= 0){
-                printf("Centered at %f\r\n", Snacko_GetYawDisplacement());
+                //printf("Centered at %f\r\n", Snacko_GetYawDisplacement());
                 nextState = Angle;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
             }
             else{
-                ES_Timer_Init();
+                //ES_Timer_Init();
                 ES_Timer_InitTimer(4, TIME_INTERVAL);
             }
             ThisEvent.EventType = ES_NO_EVENT;
@@ -179,23 +179,23 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
         if (ThisEvent.EventType == ES_ENTRY){
             total = 0;
             count = 0;
-            ES_Timer_Init();
+            //ES_Timer_Init();
             ES_Timer_InitTimer(4, TIME_INTERVAL);
             ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 4){
             count++;
-            total += Ping_GetDistance();
+            //total += Ping_GetDistance();
             if (count >= AVERAGE_CONST){
-                unsigned short averageDist = total / count;
-                printf("Aiming at %f\r\n", averageDist * PITCH_CONST);
-                Snacko_SetPitch(averageDist * PITCH_CONST);
+                //unsigned short averageDist = total / count;
+                //printf("Aiming at %f\r\n", averageDist * PITCH_CONST);
+                Snacko_SetPitch(4);
                 total = 0;
                 count = 0;
                 ThisEvent.EventType = AIMED;
             }
             else{
-                ES_Timer_Init();
+                //ES_Timer_Init();
                 ES_Timer_InitTimer(4, TIME_INTERVAL);
                 ThisEvent.EventType = ES_NO_EVENT;
             }

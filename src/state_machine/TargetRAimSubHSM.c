@@ -59,7 +59,7 @@ static TargetRAimSubHSMState_t CurrentState = InitPSubState; // <- change name t
 static uint8_t MyPriority;
 static int StepCount;
 static unsigned short total;
-static uint8_t count;
+static int count;
 
 
 /*******************************************************************************
@@ -128,14 +128,14 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
     case NextPeak:
         if (ThisEvent.EventType == ES_ENTRY){
             StepCount = 0;
-            ES_Timer_Init();
+            //ES_Timer_Init();
             ES_Timer_InitTimer(2, TIME_INTERVAL);
             ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 2){
             StepCount++;
             Snacko_RotateRight(STEP_INTERVAL);
-            ES_Timer_Init();
+            //ES_Timer_Init();
             ES_Timer_InitTimer(2, TIME_INTERVAL);
             ThisEvent.EventType = ES_NO_EVENT;
             if (StepCount > 4){
@@ -143,7 +143,7 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
             }
         }
         if (ThisEvent.EventType == PEAK_L_DETECTED){
-            printf("Second Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
+            //printf("Second Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
             nextState = Centering;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
@@ -153,7 +153,7 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
     case Centering:
         if (ThisEvent.EventType == ES_ENTRY){
             StepCount = StepCount / 2;
-            ES_Timer_Init();
+            //ES_Timer_Init();
             ES_Timer_InitTimer(2, TIME_INTERVAL);
             ThisEvent.EventType = ES_NO_EVENT;
         }
@@ -161,13 +161,13 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
             StepCount--;
             Snacko_RotateLeft(STEP_INTERVAL);
             if (StepCount <= 0){
-                printf("Centered at %f\r\n", Snacko_GetYawDisplacement());
+                //printf("Centered at %f\r\n", Snacko_GetYawDisplacement());
                 nextState = Angle;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
             }
             else{
-                ES_Timer_Init();
+                //ES_Timer_Init();
                 ES_Timer_InitTimer(2, TIME_INTERVAL);
             }
             ThisEvent.EventType = ES_NO_EVENT;
@@ -178,7 +178,7 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
         if (ThisEvent.EventType == ES_ENTRY){
             total = 0;
             count = 0;
-            ES_Timer_Init();
+            //ES_Timer_Init();
             ES_Timer_InitTimer(2, TIME_INTERVAL);
             ThisEvent.EventType = ES_NO_EVENT;
         }
@@ -195,7 +195,7 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
                 ThisEvent.EventType = AIMED;
             }
             else{
-                ES_Timer_Init();
+                //ES_Timer_Init();
                 ES_Timer_InitTimer(2, TIME_INTERVAL);
                 ThisEvent.EventType = ES_NO_EVENT;
             }

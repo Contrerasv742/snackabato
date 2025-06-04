@@ -103,7 +103,7 @@ uint8_t CheckIRPeak(void) {
     if (rawReadingR < IR_THRESHOLD){
         debounceCounterR++;
         if (debounceCounterR > DEBOUNCE_THRESHOLD && !peakedR){
-            printf("Peak R Detected\r\n");
+            //printf("Peak R Detected\r\n");
             peakedR = TRUE;
             debounceCounterR = 0;
             ES_Event thisEvent;
@@ -123,7 +123,7 @@ uint8_t CheckIRPeak(void) {
     if (rawReadingL < IR_THRESHOLD){
         debounceCounterL++;
         if (debounceCounterL > DEBOUNCE_THRESHOLD && !peakedL){
-            printf("Peak L Detected\r\n");
+            //printf("Peak L Detected\r\n");
             peakedL = TRUE;
             debounceCounterL = 0;
             ES_Event thisEvent;

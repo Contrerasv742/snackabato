@@ -136,7 +136,7 @@ ES_Event RunTargetLSubHSM(ES_Event ThisEvent)
     case Target_Fire:
         if (ThisEvent.EventType == ES_ENTRY){
             Snacko_SetFlywheelSpeed(FLYWHEEL_SPEED);
-            ES_Timer_Init();
+            //ES_Timer_Init();
             ES_Timer_InitTimer(3, FIRE_DELAY);
             ThisEvent.EventType = ES_NO_EVENT;
         }

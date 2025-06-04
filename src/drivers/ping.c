@@ -55,17 +55,17 @@ int Ping_Init(void) {
 
 
     // configure Input Capture 3 *******************************
-    TRISDbits.TRISD11 = 1;//TRISDbits.TRISD10 = 1; // Set RD10 (IC3) pin 8 as an input
+    TRISDbits.TRISD10 = 1;//TRISDbits.TRISD10 = 1; // Set RD10 (IC3) pin 8 as an input
     
-    IC4CON = 0; // clear Input Capture 3 control register
-    int rData = IC4BUF; // clear the IC3 buffer
-    IC4CONbits.ICTMR = 1; // use Timer 2 for capture source
-    IC4CONbits.ICM = 0b001; //  Edge Detect mode ? every edge (rising and falling)
-    IC4CONbits.ON = 1; // turn on IC3
+    IC3CON = 0; // clear Input Capture 3 control register
+    int rData = IC3BUF; // clear the IC3 buffer
+    IC3CONbits.ICTMR = 1; // use Timer 2 for capture source
+    IC3CONbits.ICM = 0b001; //  Edge Detect mode ? every edge (rising and falling)
+    IC3CONbits.ON = 1; // turn on IC3
 
-    IFS0bits.IC4IF = 0; // clear IC3 interrupt flag status
-    IEC0bits.IC4IE = 1; // enable IC3 interrupts
-    IPC4bits.IC4IP = 3; // set IC3 priority
+    IFS0bits.IC3IF = 0; // clear IC3 interrupt flag status
+    IEC0bits.IC3IE = 1; // enable IC3 interrupts
+    IPC3bits.IC3IP = 3; // set IC3 priority
 
 
     // configure timer 4 *******************************
@@ -90,8 +90,8 @@ int Ping_Init(void) {
     TMR5 = 0; // clear TMR4
     T5CON = 0; // clear timer 4 control register
 
-    T5CONbits.TCKPS = 0b010; // TMR4 prescaler 1:4 (3'b010)
-    PR5 = 60000; // TMR4 Period register value for 60 ms rollover
+    T5CONbits.TCKPS = 0b110; // TMR4 prescaler 1:4 (3'b010)
+    PR5 = 37493; // TMR4 Period register value for 60 ms rollover
     
     IFS0bits.T5IF = 0; // clear TMR4 interrupt flag status
     IEC0bits.T5IE = 1; // enable TMR4 interrupts
@@ -123,19 +123,20 @@ void __ISR(_TIMER_5_VECTOR) Timer5IntHandler(void) {
     TRIGGER = 0; // Set Trigger pin LOW
     
     IFS0bits.T5IF = 0; // clear interrupt flag
-     * */
+    */
+    
     static int state = TRIGGER_STATE;
         // state machine of your design
         switch (state){
             case TRIGGER_STATE: //trigger state
                 TRIGGER = 1; //write pin to high
-                PR5 = 100; //time next interrupt for 10 microseconds
+                PR5 = 7; //time next interrupt for 10 microseconds
                 state = WAIT_STATE; //change states
                 break;
 
             case WAIT_STATE: //waiting state
                 TRIGGER = 0; //write pin to low
-                PR5 = 60000; //time next interrupt for 60 milliseconds
+                PR5 = 37493; //time next interrupt for 60 milliseconds
                 state = TRIGGER_STATE; //change states
                 break;
         }
@@ -145,17 +146,17 @@ void __ISR(_TIMER_5_VECTOR) Timer5IntHandler(void) {
 volatile unsigned short risingEdge = 0;
 volatile unsigned short fallingEdge = 0;
 
-void __ISR(_INPUT_CAPTURE_4_VECTOR, IPL4SOFT) __IC4Interrupt(void) {
-    unsigned short timestamp = (IC4BUF & 0xFFFF); // Read 16-bit IC3BUF
+void __ISR(_INPUT_CAPTURE_3_VECTOR, IPL3SOFT) __IC3Interrupt(void) {
+    unsigned short timestamp = (IC3BUF & 0xFFFF); // Read 16-bit IC3BUF
     //printf("here\r\n");
-    if (PORTDbits.RD11) { // If input pin is HIGH, it's a rising edge (Y-6))
+    if (PORTDbits.RD10) { // If input pin is HIGH, it's a rising edge (Y-6))
         risingEdge = timestamp;
     } else { // Falling edge
         fallingEdge = timestamp;
         pingPeriod = (fallingEdge - risingEdge); // Calculate time-of-flight
     }
     
-    IFS0bits.IC4IF = 0; // Clear interrupt flag
+    IFS0bits.IC3IF = 0; // Clear interrupt flag
 }
 
 

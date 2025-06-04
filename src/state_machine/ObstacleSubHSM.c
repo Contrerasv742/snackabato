@@ -55,7 +55,7 @@ static const char *StateNames[] = {
 
 static ObstacleSubHSMState_t CurrentState = InitPSubState; // <- change name to match ENUM
 static uint8_t MyPriority;
-static uint8_t StepCount;
+static int StepCount;
 static int fired;
 
 
@@ -126,8 +126,8 @@ ES_Event RunObstacleSubHSM(ES_Event ThisEvent)
         //ThisEvent = RunObstacleAimSubHSM(ThisEvent);
         if (ThisEvent.EventType == ES_ENTRY){
             StepCount = 0;
-            printf("Aiming at Obstacle (%f)\r\n", OBSTACLE_PITCH);
-            Snacko_SetPitch(OBSTACLE_PITCH);
+            //printf("Aiming at Obstacle (%f)\r\n", OBSTACLE_PITCH);
+            //Snacko_SetPitch(OBSTACLE_PITCH);
             ES_Timer_Init();
             ES_Timer_InitTimer(5, TIME_INTERVAL);
             ThisEvent.EventType = ES_NO_EVENT;

@@ -137,7 +137,7 @@ ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
                 makeTransition = TRUE;
             }
             else{
-                ES_Timer_Init();
+                //ES_Timer_Init();
                 ES_Timer_InitTimer(0, TIME_INTERVAL);
             }
             ThisEvent.EventType = ES_NO_EVENT;
@@ -150,12 +150,12 @@ ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
     case Sweep_Left:
         if (ThisEvent.EventType == ES_ENTRY){
             //Snacko_SetDirection(LEFT);
-            ES_Timer_Init();
+            //ES_Timer_Init();
             ES_Timer_InitTimer(0, TIME_INTERVAL);
             ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 0){
-            printf("Rotating Left, Currently at %f\r\n", Snacko_GetYawDisplacement());
+            //printf("Rotating Left, Currently at %f\r\n", Snacko_GetYawDisplacement());
             Snacko_RotateLeft(STEP_INTERVAL);
             if (Snacko_GetYawDisplacement() <= 0.5){
                 nextState = Sweep_Right;
@@ -163,7 +163,7 @@ ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
                 ThisEvent.EventType = ES_NO_EVENT;
             }
             else{
-                ES_Timer_Init();
+                //ES_Timer_Init();
                 ES_Timer_InitTimer(0, TIME_INTERVAL);
                 ThisEvent.EventType = ES_NO_EVENT;
             }

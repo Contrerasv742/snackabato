@@ -304,7 +304,7 @@ double Snacko_GetPitchDisplacement(void){
     return PitchDisplacement;
 }
 
-#define SNACKO_TEST
+//#define SNACKO_TEST
 #ifdef SNACKO_TEST
 #define DELAY(x)    for (wait = 0; wait <= x; wait++) {asm("nop");}
 #define A_BIT       18300

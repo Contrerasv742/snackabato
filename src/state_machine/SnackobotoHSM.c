@@ -158,7 +158,7 @@
      case Calibration:
          //ThisEvent = RunCalibrationSubHSM(ThisEvent);
          if (ThisEvent.EventType == ES_ENTRY){
-             ES_Timer_Init();
+             //ES_Timer_Init();
              ES_Timer_InitTimer(6, TIME_INTERVAL);
              ThisEvent.EventType = ES_NO_EVENT;
          }
@@ -166,7 +166,7 @@
             Snacko_PitchDown(STEP_INTERVAL);
             //DELAY(MOTOR_TIME);
             //printf("New Pitch: %f\r\n",Snacko_GetPitchDisplacement());
-            ES_Timer_Init();
+            //ES_Timer_Init();
             ES_Timer_InitTimer(6, TIME_INTERVAL);
             ThisEvent.EventType = ES_NO_EVENT;
          }
@@ -195,14 +195,14 @@
              ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == PEAK_R_DETECTED){
-             printf("R Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
+             //printf("R Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
              InitTargetRSubHSM();
              nextState = TargetR;
              makeTransition = TRUE;
              ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == PEAK_L_DETECTED){
-             printf("L Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
+             //printf("L Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
              InitTargetLSubHSM();
              nextState = TargetL;
              makeTransition = TRUE;
