@@ -35,7 +35,7 @@ static const char *StateNames[] = {
 #define STEP_INTERVAL 16
 #define TIME_INTERVAL 500
 #define ANGLE_PER_STEP 1.8
-#define MAX_YAW 120
+#define MAX_YAW 60
 
 
 /*******************************************************************************
@@ -142,9 +142,6 @@ ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
             }
             ThisEvent.EventType = ES_NO_EVENT;
         }
-        else{
-            ThisEvent.EventType = ES_NO_EVENT;
-        }
         break;
 
     case Sweep_Left:
@@ -157,7 +154,7 @@ ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 0){
             //printf("Rotating Left, Currently at %f\r\n", Snacko_GetYawDisplacement());
             Snacko_RotateLeft(STEP_INTERVAL);
-            if (Snacko_GetYawDisplacement() <= 0.5){
+            if (Snacko_GetYawDisplacement() <= -MAX_YAW){
                 nextState = Sweep_Right;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;

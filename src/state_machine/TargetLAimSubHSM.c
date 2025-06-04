@@ -120,7 +120,7 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
             // initial state
 
             // now put the machine into the actual initial state
-            nextState = NextPeak;
+            nextState = Angle;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
@@ -180,7 +180,7 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
             total = 0;
             count = 0;
             //ES_Timer_Init();
-            ES_Timer_InitTimer(4, TIME_INTERVAL);
+            ES_Timer_InitTimer(4, 500);
             ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 4){
@@ -189,7 +189,7 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
             if (count >= AVERAGE_CONST){
                 //unsigned short averageDist = total / count;
                 //printf("Aiming at %f\r\n", averageDist * PITCH_CONST);
-                Snacko_SetPitch(4);
+                Snacko_SetPitch(8);
                 total = 0;
                 count = 0;
                 ThisEvent.EventType = AIMED;

@@ -100,6 +100,7 @@ uint8_t CheckIRPeak(void) {
     unsigned int rawReadingL = IR_GetReadingL();
     uint8_t returnVal = FALSE;
     //printf("IR_READING_R: %d, IR_READING_L: %d\r\n", rawReadingR, rawReadingL);
+    
     if (rawReadingR < IR_THRESHOLD){
         debounceCounterR++;
         if (debounceCounterR > DEBOUNCE_THRESHOLD && !peakedR){

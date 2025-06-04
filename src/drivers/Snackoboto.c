@@ -38,7 +38,7 @@ typedef enum {
 #define STEP_INTERVAL 1
 #define TIME_INTERVAL 200
 #define ANGLE_PER_STEP 1.8
-#define MAX_YAW 15
+#define MAX_YAW 60
 
 // Defines for the Servo Motors (Part 1)
 #define SERVO_PIN RC_PORTV03
@@ -127,7 +127,10 @@ int Snacko_RotateLeft(unsigned int steps){
     if (!Stepper_IsStepping(STEPPER_2)){
         Stepper_InitSteps(FORWARD, steps, STEPPER_2);
     }
-    YawDisplacement = YawDisplacement - (ANGLE_PER_STEP * steps);
+    if (YawDisplacement > -MAX_YAW){
+        YawDisplacement = YawDisplacement - (ANGLE_PER_STEP * steps);
+    }
+    //YawDisplacement = YawDisplacement - (ANGLE_PER_STEP * steps);
     return SUCCESS;
 }
 
@@ -141,7 +144,10 @@ int Snacko_RotateRight(unsigned int steps){
         Stepper_InitSteps(REVERSE, steps, STEPPER_2);
     }
     //printf("%f adding %f\r\n", YawDisplacement, YawDisplacement + (ANGLE_PER_STEP * steps));
-    YawDisplacement = YawDisplacement + (ANGLE_PER_STEP * steps);
+    if (YawDisplacement < MAX_YAW){
+        YawDisplacement = YawDisplacement + (ANGLE_PER_STEP * steps);
+    }
+    //YawDisplacement = YawDisplacement + (ANGLE_PER_STEP * steps);
     return SUCCESS;
 }
 

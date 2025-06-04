@@ -119,7 +119,7 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
             // initial state
 
             // now put the machine into the actual initial state
-            nextState = NextPeak;
+            nextState = Angle;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
@@ -184,12 +184,12 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 2){
             count++;
-            total += Ping_GetDistance();
+            //total += Ping_GetDistance();
             if (count >= AVERAGE_CONST){
                 //unsigned short averageDist = total / count;
                 //printf("Aiming at %f\r\n", averageDist * PITCH_CONST);
                 //Snacko_SetPitch(averageDist * PITCH_CONST);
-                Snacko_PitchUp(4);
+                Snacko_PitchUp(8);
                 total = 0;
                 count = 0;
                 ThisEvent.EventType = AIMED;
