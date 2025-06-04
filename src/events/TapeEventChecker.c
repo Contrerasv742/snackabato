@@ -93,6 +93,7 @@
          thisEvent.EventType = curEvent;
          returnVal = TRUE;
          lastEvent = curEvent; // update history
+         printf("Here\r\n");
         #ifndef EVENTCHECKER_TEST           // keep this as is for test harness
                 //PostSnackoHSM(thisEvent); // Change it to your target service's post function
         #else

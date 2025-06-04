@@ -100,7 +100,7 @@ ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
 {
     uint8_t makeTransition = FALSE; // use to flag transition
     SearchingSubHSMState_t nextState; // <- change type to correct enum
-
+    
     ES_Tattle(); // trace call stack
 
     switch (CurrentState) {

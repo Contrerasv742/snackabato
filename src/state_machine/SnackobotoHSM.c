@@ -222,7 +222,7 @@
              ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == CANDY_FIRED || ThisEvent.EventType == TARGET_LOST){
-             //InitSearchingSubHSM();
+             InitSearchingSubHSM();
              nextState = Searching;
              makeTransition = TRUE;
              ThisEvent.EventType = ES_NO_EVENT;
@@ -235,7 +235,7 @@
              ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == CANDY_FIRED){
-             //InitSearchingSubHSM();
+             InitSearchingSubHSM();
              nextState = Searching;
              makeTransition = TRUE;
              ThisEvent.EventType = ES_NO_EVENT;
@@ -248,7 +248,7 @@
              ThisEvent.EventType = ES_NO_EVENT;
          }
          if (ThisEvent.EventType == CANDY_FIRED){
-             //InitSearchingSubHSM();
+             InitSearchingSubHSM();
              nextState = Searching;
              makeTransition = TRUE;
              ThisEvent.EventType = ES_NO_EVENT;
