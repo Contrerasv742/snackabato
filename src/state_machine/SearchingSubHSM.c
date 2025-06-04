@@ -141,7 +141,7 @@ ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
                 ES_Timer_InitTimer(0, TIME_INTERVAL);
             }
             ThisEvent.EventType = ES_NO_EVENT;
-        }
+        } 
         break;
 
     case Sweep_Left:
