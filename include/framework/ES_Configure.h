@@ -103,7 +103,7 @@
  #define TIMER4_RESP_FUNC PostSnackoHSM
  #define TIMER5_RESP_FUNC PostSnackoHSM
  #define TIMER6_RESP_FUNC PostSnackoHSM
- #define TIMER7_RESP_FUNC TIMER_UNUSED
+ #define TIMER7_RESP_FUNC TIMER_UNUSED //PostKnockdownService
  #define TIMER8_RESP_FUNC TIMER_UNUSED
  #define TIMER9_RESP_FUNC TIMER_UNUSED
  #define TIMER10_RESP_FUNC TIMER_UNUSED
@@ -164,11 +164,11 @@
  // These are the definitions for Service 2
  #if NUM_SERVICES > 2
  // the header file with the public fuction prototypes
- #define SERV_2_HEADER "SearchingSubHSM.h"
+ #define SERV_2_HEADER "KnockdownService.h"
  // the name of the Init function
- #define SERV_2_INIT InitSearchingSubHSM
+ #define SERV_2_INIT InitKnockdownService
  // the name of the run function
- #define SERV_2_RUN RunSearchingSubHSM
+ #define SERV_2_RUN RunKnockdownService
  // How big should this services Queue be?
  #define SERV_2_QUEUE_SIZE 3
  #endif

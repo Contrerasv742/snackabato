@@ -39,8 +39,8 @@
 /*******************************************************************************
  * MODULE #DEFINES                                                             *
  ******************************************************************************/
-#define IR_THRESHOLD 2
-#define DEBOUNCE_THRESHOLD 5
+#define IR_THRESHOLD 30
+#define DEBOUNCE_THRESHOLD 4
 
 /*******************************************************************************
  * EVENTCHECKER_TEST SPECIFIC CODE                                                             *

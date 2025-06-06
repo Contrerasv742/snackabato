@@ -20,8 +20,8 @@
  /*******************************************************************************
   * MODULE #DEFINES                                                             *
   ******************************************************************************/
- #define HIGH_THRESHOLD 800
- #define LOW_THRESHOLD 500
+ #define HIGH_THRESHOLD 900
+ #define LOW_THRESHOLD 700
  
  /*******************************************************************************
   * EVENTCHECKER_TEST SPECIFIC CODE                                                             *
@@ -69,7 +69,7 @@
   * @author Gabriel H Elkaim, 2013.09.27 09:18
   * @modified Gabriel H Elkaim/Max Dunne, 2016.09.12 20:08 */
  uint8_t CheckTapeReading(void) {
-     static ES_EventTyp_t lastEvent = TAPE_LOST;
+     static ES_EventTyp_t lastEvent = ES_NO_EVENT;
      ES_EventTyp_t curEvent;
      ES_Event thisEvent;
      uint8_t returnVal = FALSE;
@@ -83,19 +83,22 @@
      else if (sensorReading < LOW_THRESHOLD){
          curEvent = TAPE_LOST;
      }
+     else{
+         return FALSE;
+     }
      if (curEvent != lastEvent) { // check for change from last time
          if (curEvent == TAPE_DETECTED){
-             //printf("Tape Detected Event\r\n");
+             printf("Tape Detected Event\r\n");
          }
          else if (curEvent == TAPE_LOST){
-             //printf("Tape Lost Event\r\n");
+             printf("Tape Lost Event\r\n");
          }
          thisEvent.EventType = curEvent;
          returnVal = TRUE;
          lastEvent = curEvent; // update history
-         printf("Here\r\n");
+         //printf("Here\r\n");
         #ifndef EVENTCHECKER_TEST           // keep this as is for test harness
-                //PostSnackoHSM(thisEvent); // Change it to your target service's post function
+                PostSnackoHSM(thisEvent); // Change it to your target service's post function
         #else
                 SaveEvent(thisEvent);
         #endif   

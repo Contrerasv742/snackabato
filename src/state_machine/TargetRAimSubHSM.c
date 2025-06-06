@@ -143,7 +143,7 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
             }
         }
         if (ThisEvent.EventType == PEAK_L_DETECTED){
-            //printf("Second Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
+            printf("Second Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
             nextState = Centering;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
@@ -161,7 +161,7 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
             StepCount--;
             Snacko_RotateLeft(STEP_INTERVAL);
             if (StepCount <= 0){
-                //printf("Centered at %f\r\n", Snacko_GetYawDisplacement());
+                printf("Centered at %f\r\n", Snacko_GetYawDisplacement());
                 nextState = Angle;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
@@ -182,9 +182,17 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
             ES_Timer_InitTimer(2, TIME_INTERVAL);
             ThisEvent.EventType = ES_NO_EVENT;
         }
-        if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 2){
+        else if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 2){
+            //printf("angling\r\n");
+            //printf("pitch\r\n");
+            
+            Snacko_PitchUp(4);
+            ES_Timer_InitTimer(2, 150);
+            ThisEvent.EventType = ES_NO_EVENT;
+            /*
             count++;
             //total += Ping_GetDistance();
+            
             if (count >= AVERAGE_CONST){
                 //unsigned short averageDist = total / count;
                 //printf("Aiming at %f\r\n", averageDist * PITCH_CONST);
@@ -198,7 +206,11 @@ ES_Event RunTargetRAimSubHSM(ES_Event ThisEvent)
                 //ES_Timer_Init();
                 ES_Timer_InitTimer(2, TIME_INTERVAL);
                 ThisEvent.EventType = ES_NO_EVENT;
-            }
+            }*/
+        }
+        
+        else if (ThisEvent.EventType == TAPE_LOST){
+            ThisEvent.EventType = AIMED;
         }
         break;
         

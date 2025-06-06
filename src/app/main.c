@@ -221,3 +221,30 @@ void main(void)
     }
 }
 #endif
+
+//#define PING_TEST
+#ifdef PING_TEST
+#define DELAY(x)    for (unsigned int wait = 0; wait <= x; wait++) {asm("nop");}
+#define A_BIT       18300
+#define A_BIT_MORE  36600
+#define YET_A_BIT_LONGER (A_BIT_MORE<<2)
+#define A_LOT       183000
+#define NUM_TIMES_REPEAT_LED 5
+#define MOTOR_TIME (A_LOT<<2)
+#include "EventChecker.h"
+void main(void)
+{
+    ES_Return_t ErrorType;
+    unsigned int reading;
+    BOARD_Init();
+    Ping_Init();
+    while(1){
+        /*
+        reading = Ping_GetDistance();
+        printf("PING: %d\r\n", reading);
+         * */
+        CheckObstacle();
+        DELAY(A_BIT_MORE);
+    }
+}
+#endif

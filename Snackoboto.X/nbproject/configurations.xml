@@ -19,6 +19,7 @@
       <itemPath>../include/state_machine/TargetLSubHSM.h</itemPath>
       <itemPath>../include/state_machine/TargetRAimSubHSM.h</itemPath>
       <itemPath>../include/state_machine/TargetRSubHSM.h</itemPath>
+      <itemPath>../src/events/KnockdownService.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -60,6 +61,7 @@
           <itemPath>../src/events/TemplateEventChecker.c</itemPath>
           <itemPath>../src/events/TemplateService.c</itemPath>
           <itemPath>../src/events/ObstacleEventChecker.c</itemPath>
+          <itemPath>../src/events/KnockdownService.c</itemPath>
         </logicalFolder>
         <logicalFolder name="framework" displayName="framework" projectFiles="true">
           <itemPath>../src/framework/ES_CheckEvents.c</itemPath>

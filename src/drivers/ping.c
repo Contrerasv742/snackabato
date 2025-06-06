@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <ping.h>
 
-#define TRIGGER LATEbits.LATE7//LATDbits.LATD9
+#define TRIGGER LATDbits.LATD9//LATDbits.LATD9
 #define TRIGGER_STATE 0
 #define WAIT_STATE 1
 
@@ -26,13 +26,15 @@ void bNOP_delay_1us(int a) {
     }
 }
 
+volatile unsigned short risingEdge = 0;
+volatile unsigned short fallingEdge = 0;
 /**
  * @Function PingSensor_Init(void)
  * @param None
  * @return SUCCESS or ERROR
  * @brief initializes hardware for PingSensor with the needed interrupts */
 int Ping_Init(void) {
-    TRISEbits.TRISE7 = 0;//TRISDbits.TRISD9 = 0; // Set RD9 (TRIGGER) pin 7 as an output (Y-8)
+    TRISDbits.TRISD9 = 0;//TRISDbits.TRISD9 = 0; // Set RD9 (TRIGGER) pin 7 as an output (Y-8)
     
     // Configure Timer 2 *******************************
     //(as much resolution as possible consistent with > 11.68msec rollover.
@@ -106,13 +108,22 @@ int Ping_Init(void) {
  * @param None
  * @return Unsigned Short corresponding to distance in millimeters */
 unsigned short Ping_GetDistance(void) {
+    // Base Case: Ping Period out of bounds
+    if ((pingPeriod == 0) || 
+        (pingPeriod > 23200)) {
+        //Ping_Init();
+        return 0xFFFF;
+    }
+    
     unsigned short dist = pingPeriod / 58;
+    
     if (dist < 400){
         prev = dist;
         return dist;
     }
-    Ping_Init();
-    return prev; // return ping period in cm?
+    
+    //Ping_Init();
+    return dist; // return ping period in cm?
 }
 
 
@@ -143,17 +154,29 @@ void __ISR(_TIMER_5_VECTOR) Timer5IntHandler(void) {
     IFS0bits.T5IF = 0;
 }
 
-volatile unsigned short risingEdge = 0;
-volatile unsigned short fallingEdge = 0;
 
 void __ISR(_INPUT_CAPTURE_3_VECTOR, IPL3SOFT) __IC3Interrupt(void) {
     unsigned short timestamp = (IC3BUF & 0xFFFF); // Read 16-bit IC3BUF
     //printf("here\r\n");
+    /*
     if (PORTDbits.RD10) { // If input pin is HIGH, it's a rising edge (Y-6))
         risingEdge = timestamp;
     } else { // Falling edge
         fallingEdge = timestamp;
         pingPeriod = (fallingEdge - risingEdge); // Calculate time-of-flight
+    }*/
+    if (PORTDbits.RD10) { // Rising edge
+        risingEdge = timestamp;
+    } else { // Falling edge
+        fallingEdge = timestamp;
+        
+        // Handle timer overflow
+        if (fallingEdge >= risingEdge) {
+            pingPeriod = (fallingEdge - risingEdge);
+        } else {
+            // Timer overflowed between edges
+            pingPeriod = (65536 - risingEdge) + fallingEdge;
+        }
     }
     
     IFS0bits.IC3IF = 0; // Clear interrupt flag

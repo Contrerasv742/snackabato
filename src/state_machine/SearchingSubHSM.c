@@ -32,8 +32,8 @@ static const char *StateNames[] = {
     "Sweep_Left",
 };
 
-#define STEP_INTERVAL 16
-#define TIME_INTERVAL 500
+#define STEP_INTERVAL 12
+#define TIME_INTERVAL 150
 #define ANGLE_PER_STEP 1.8
 #define MAX_YAW 60
 
@@ -122,7 +122,7 @@ ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
         //printf("Sweeping Right\r\n");
         if (ThisEvent.EventType == ES_ENTRY){
             //printf("SWEEP_RIGHT_ENTRY\r\n");
-            //Snacko_SetDirection(RIGHT);
+            Snacko_SetDirection(RIGHT);
             //ES_Timer_Init();
             ES_Timer_InitTimer(0, TIME_INTERVAL);
             ThisEvent.EventType = ES_NO_EVENT;
@@ -146,7 +146,7 @@ ES_Event RunSearchingSubHSM(ES_Event ThisEvent)
 
     case Sweep_Left:
         if (ThisEvent.EventType == ES_ENTRY){
-            //Snacko_SetDirection(LEFT);
+            Snacko_SetDirection(LEFT);
             //ES_Timer_Init();
             ES_Timer_InitTimer(0, TIME_INTERVAL);
             ThisEvent.EventType = ES_NO_EVENT;

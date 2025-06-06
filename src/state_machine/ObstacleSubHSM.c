@@ -32,9 +32,9 @@ static const char *StateNames[] = {
     "Obstacle_Fire",
 };
 
-#define FLYWHEEL_SPEED 300
-#define FIRE_DELAY 1000
-#define STEP_INTERVAL 4
+#define FLYWHEEL_SPEED 1000
+#define FIRE_DELAY 2000
+#define STEP_INTERVAL 8
 #define TIME_INTERVAL 1000
 #define ANGLE_PER_STEP 1
 #define CENTERING_STEPS 5
@@ -129,25 +129,26 @@ ES_Event RunObstacleSubHSM(ES_Event ThisEvent)
             //printf("Aiming at Obstacle (%f)\r\n", OBSTACLE_PITCH);
             //Snacko_SetPitch(OBSTACLE_PITCH);
             ES_Timer_Init();
-            ES_Timer_InitTimer(5, TIME_INTERVAL);
+            ES_Timer_InitTimer(5, 250);
             ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 5){
             StepCount++;
+            
             if (Snacko_GetDirection() == RIGHT){
-                Snacko_RotateLeft(STEP_INTERVAL);
-            }
-            else{
                 Snacko_RotateRight(STEP_INTERVAL);
             }
-            if (StepCount >= 5){
+            else{
+                Snacko_RotateLeft(STEP_INTERVAL);
+            }
+            if (StepCount >= 2){
                 nextState = Obstacle_Fire;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
             }
             else{
                 ES_Timer_Init();
-                ES_Timer_InitTimer(5, TIME_INTERVAL);
+                ES_Timer_InitTimer(5, 250);
             }
             ThisEvent.EventType = ES_NO_EVENT;
         }

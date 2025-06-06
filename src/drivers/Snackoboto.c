@@ -44,7 +44,7 @@ typedef enum {
 #define SERVO_PIN RC_PORTV03
 #define SERVO_STEP_RATE 600
 #define SINGLE_FIRE_DUTY_CYCLE 150
-#define SERVO_INIT_DUTY 1000
+#define SERVO_INIT_DUTY 950
 
 // Defines for the DC Motors (Part 4)
 //#define ENABLE_PIN          RC_PORTY07
@@ -371,25 +371,32 @@ double Snacko_GetPitchDisplacement(void){
                             "m: Keyboard Input Menu\r\n"
              "*******************************************************************\r\n");
      unsigned int ping;
+     int speed = 0;
      while (1) {
+         //ping = Ping_GetDistance();
+                    //printf("Ping Reading: %d\r\n", ping);
          CheckObstacle();
          CheckIRPeak();
          CheckTapeReading();
+         
         int reading;
         if (!IsReceiveEmpty()) {
             char input = GetChar();
             switch (input) {
                 case 'w':
-                    Snacko_SetFlywheelSpeed(1000);
-                    printf("Flywheel On\r\n");
+                    //speed += 50;
+                    Snacko_SetFlywheelSpeed(500);
+                    printf("Flywheel On, Speed = %d%\r\n", speed);
                     //DELAY(MOTOR_TIME);
                     break;
                 case 's':
                     Snacko_SetFlywheelSpeed(0);
+                    speed = 0;
                     printf("Flywheel Off\r\n");
                     //DELAY(MOTOR_TIME);
                     break;
                 case 'a':
+                    //Snacko_SetFlywheelSpeed(1000);
                     Snacko_RotateLeft(8);
                     printf("Rotating Left\r\n");
                     //DELAY(MOTOR_TIME);

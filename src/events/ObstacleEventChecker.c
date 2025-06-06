@@ -21,8 +21,8 @@
  /*******************************************************************************
   * MODULE #DEFINES                                                             *
   ******************************************************************************/
- #define OBSTACLE_THRESHOLD 50
- #define DEBOUNCE_THRESHOLD 5
+ #define OBSTACLE_THRESHOLD 100
+ #define DEBOUNCE_THRESHOLD 6
  
  /*******************************************************************************
   * EVENTCHECKER_TEST SPECIFIC CODE                                                             *
@@ -91,7 +91,7 @@
             #ifdef EVENTCHECKER_TEST           // keep this as is for test harness
                 SaveEvent(thisEvent);
             #else
-                //PostSnackoHSM(thisEvent); // Change it to your target service's post function
+                PostSnackoHSM(thisEvent); // Change it to your target service's post function
             #endif  
             returnVal = FALSE;
         }

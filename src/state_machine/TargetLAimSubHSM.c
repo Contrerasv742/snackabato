@@ -120,7 +120,7 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
             // initial state
 
             // now put the machine into the actual initial state
-            nextState = Angle;
+            nextState = NextPeak;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
         }
@@ -144,7 +144,7 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
             }
         }
         if (ThisEvent.EventType == PEAK_R_DETECTED){
-            //printf("Second Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
+            printf("Second Peak Detected at %f\r\n", Snacko_GetYawDisplacement());
             nextState = Centering;
             makeTransition = TRUE;
             ThisEvent.EventType = ES_NO_EVENT;
@@ -162,7 +162,7 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
             StepCount--;
             Snacko_RotateRight(STEP_INTERVAL);
             if (StepCount <= 0){
-                //printf("Centered at %f\r\n", Snacko_GetYawDisplacement());
+                printf("Centered at %f\r\n", Snacko_GetYawDisplacement());
                 nextState = Angle;
                 makeTransition = TRUE;
                 ThisEvent.EventType = ES_NO_EVENT;
@@ -177,13 +177,31 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
 
     case Angle:
         if (ThisEvent.EventType == ES_ENTRY){
-            total = 0;
+            //total = 0;
             count = 0;
             //ES_Timer_Init();
             ES_Timer_InitTimer(4, 500);
             ThisEvent.EventType = ES_NO_EVENT;
         }
         if (ThisEvent.EventType == ES_TIMEOUT && ThisEvent.EventParam == 4){
+            //printf("angling\r\n");
+            count++;
+            if (count < 4){
+                Snacko_PitchUp(4);
+                ES_Timer_InitTimer(2, 250);
+                ThisEvent.EventType = ES_NO_EVENT;
+            }
+            else {
+                count = 0;
+                ThisEvent.EventType = AIMED;
+                //printf("aimed\r\n");
+            }
+            /*
+            Snacko_PitchUp(5);
+            //printf("pitch\r\n");
+            ES_Timer_InitTimer(4, 250);
+            ThisEvent.EventType = ES_NO_EVENT;
+            /*
             count++;
             //total += Ping_GetDistance();
             if (count >= AVERAGE_CONST){
@@ -199,7 +217,13 @@ ES_Event RunTargetLAimSubHSM(ES_Event ThisEvent)
                 ES_Timer_InitTimer(4, TIME_INTERVAL);
                 ThisEvent.EventType = ES_NO_EVENT;
             }
+            */
         }
+        /*
+        if (ThisEvent.EventType == TAPE_LOST){
+            ThisEvent.EventType = AIMED;
+        }
+         * */
         break;
         
     default: // all unhandled states fall into here

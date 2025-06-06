@@ -33,7 +33,7 @@ static const char *StateNames[] = {
 };
 
 #define FLYWHEEL_SPEED 1000
-#define FIRE_DELAY 3000
+#define FIRE_DELAY 2000
 
 
 

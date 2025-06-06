@@ -3,14 +3,24 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/framework/ES_CheckEvents.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/state_machine/SearchingSubHSM.c</file>
             <file>file:/C:/Users/andyl/Downloads/ece118_files/ece118_base/serial.c</file>
-            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/events/TapeEventChecker.c</file>
             <file>file:/C:/Users/andyl/ECE-118/snackabato/src/drivers/Snackoboto.c</file>
-            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/drivers/AD.c</file>
-            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/events/HallEventChecker.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/drivers/IR_Sensor.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/state_machine/SnackobotoHSM.c</file>
             <file>file:/C:/Users/andyl/ECE-118/snackabato/src/app/main.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/state_machine/TargetRAimSubHSM.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/framework/ES_Framework.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/state_machine/ObstacleSubHSM.c</file>
             <file>file:/C:/Users/andyl/ECE-118/snackabato/src/events/IRPeakEventChecker.c</file>
             <file>file:/C:/Users/andyl/ECE-118/snackabato/src/events/ObstacleEventChecker.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/state_machine/TargetRSubHSM.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/drivers/ping.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/drivers/TapeSensor.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/events/TapeEventChecker.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/drivers/AD.c</file>
+            <file>file:/C:/Users/andyl/ECE-118/snackabato/src/drivers/RC_Servo.c</file>
         </group>
     </open-files>
 </project-private>
